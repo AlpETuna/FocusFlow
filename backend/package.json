@@ -1,0 +1,27 @@
+{
+  "name": "focusflow-backend",
+  "version": "1.0.0",
+  "description": "FocusFlow serverless backend",
+  "main": "index.js",
+  "scripts": {
+    "deploy-dev": "serverless deploy --stage dev",
+    "deploy-prod": "serverless deploy --stage prod",
+    "remove-dev": "serverless remove --stage dev",
+    "remove-prod": "serverless remove --stage prod",
+    "logs": "serverless logs -f",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.1691.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "uuid": "^9.0.1",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "serverless": "^3.38.0",
+    "serverless-dotenv-plugin": "^6.0.0"
+  },
+  "author": "FocusFlow",
+  "license": "MIT"
+}

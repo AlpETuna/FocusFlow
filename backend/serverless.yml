@@ -1,0 +1,348 @@
+service: focusflow-backend
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ${opt:region, 'us-east-1'}
+  stage: ${opt:stage, 'dev'}
+  environment:
+    JWT_SECRET: ${env:JWT_SECRET}
+    AWS_REGION: ${self:provider.region}
+    STAGE: ${self:provider.stage}
+    USERS_TABLE: ${self:service}-${self:provider.stage}-users
+    FOCUS_SESSIONS_TABLE: ${self:service}-${self:provider.stage}-focus-sessions
+    FOCUS_SCORES_TABLE: ${self:service}-${self:provider.stage}-focus-scores
+    GROUPS_TABLE: ${self:service}-${self:provider.stage}-groups
+    GROUP_MEMBERS_TABLE: ${self:service}-${self:provider.stage}-group-members
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource:
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.USERS_TABLE}"
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.FOCUS_SESSIONS_TABLE}"
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.FOCUS_SCORES_TABLE}"
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.GROUPS_TABLE}"
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.GROUP_MEMBERS_TABLE}"
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.USERS_TABLE}/index/*"
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.FOCUS_SESSIONS_TABLE}/index/*"
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.FOCUS_SCORES_TABLE}/index/*"
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.GROUPS_TABLE}/index/*"
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.GROUP_MEMBERS_TABLE}/index/*"
+        - Effect: Allow
+          Action:
+            - bedrock:InvokeModel
+            - bedrock:InvokeModelWithResponseStream
+          Resource:
+            - "arn:aws:bedrock:${self:provider.region}::foundation-model/anthropic.claude-3-sonnet-20240229-v1:0"
+
+plugins:
+  - serverless-dotenv-plugin
+
+functions:
+  # Authentication Functions
+  register:
+    handler: src/handlers/auth.register
+    events:
+      - http:
+          path: auth/register
+          method: post
+          cors: true
+
+  login:
+    handler: src/handlers/auth.login
+    events:
+      - http:
+          path: auth/login
+          method: post
+          cors: true
+
+  getProfile:
+    handler: src/handlers/auth.getProfile
+    events:
+      - http:
+          path: auth/profile
+          method: get
+          cors: true
+
+  updateProfile:
+    handler: src/handlers/auth.updateProfile
+    events:
+      - http:
+          path: auth/profile
+          method: put
+          cors: true
+
+  # Focus Session Functions
+  startSession:
+    handler: src/handlers/sessions.startSession
+    events:
+      - http:
+          path: sessions/start
+          method: post
+          cors: true
+
+  stopSession:
+    handler: src/handlers/sessions.stopSession
+    events:
+      - http:
+          path: sessions/stop
+          method: post
+          cors: true
+
+  getSessions:
+    handler: src/handlers/sessions.getSessions
+    events:
+      - http:
+          path: sessions
+          method: get
+          cors: true
+
+  # Screen Analysis Functions
+  analyzeScreen:
+    handler: src/handlers/analysis.analyzeScreen
+    events:
+      - http:
+          path: analysis/screen
+          method: post
+          cors: true
+    timeout: 30
+
+  # Group Functions
+  createGroup:
+    handler: src/handlers/groups.createGroup
+    events:
+      - http:
+          path: groups
+          method: post
+          cors: true
+
+  joinGroup:
+    handler: src/handlers/groups.joinGroup
+    events:
+      - http:
+          path: groups/{groupId}/join
+          method: post
+          cors: true
+
+  getGroups:
+    handler: src/handlers/groups.getGroups
+    events:
+      - http:
+          path: groups
+          method: get
+          cors: true
+
+  getGroupDetails:
+    handler: src/handlers/groups.getGroupDetails
+    events:
+      - http:
+          path: groups/{groupId}
+          method: get
+          cors: true
+
+  # Leaderboard Functions
+  getLeaderboard:
+    handler: src/handlers/leaderboard.getLeaderboard
+    events:
+      - http:
+          path: leaderboard
+          method: get
+          cors: true
+
+  getFriendsLeaderboard:
+    handler: src/handlers/leaderboard.getFriendsLeaderboard
+    events:
+      - http:
+          path: leaderboard/friends
+          method: get
+          cors: true
+
+  # Friends Functions
+  addFriend:
+    handler: src/handlers/friends.addFriend
+    events:
+      - http:
+          path: friends/add
+          method: post
+          cors: true
+
+  getFriends:
+    handler: src/handlers/friends.getFriends
+    events:
+      - http:
+          path: friends
+          method: get
+          cors: true
+
+resources:
+  Resources:
+    # Users Table
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.USERS_TABLE}
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+          - AttributeName: email
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: EmailIndex
+            KeySchema:
+              - AttributeName: email
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            BillingMode: PAY_PER_REQUEST
+        BillingMode: PAY_PER_REQUEST
+
+    # Focus Sessions Table
+    FocusSessionsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.FOCUS_SESSIONS_TABLE}
+        AttributeDefinitions:
+          - AttributeName: sessionId
+            AttributeType: S
+          - AttributeName: userId
+            AttributeType: S
+          - AttributeName: startTime
+            AttributeType: S
+        KeySchema:
+          - AttributeName: sessionId
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: UserSessions
+            KeySchema:
+              - AttributeName: userId
+                KeyType: HASH
+              - AttributeName: startTime
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+            BillingMode: PAY_PER_REQUEST
+        BillingMode: PAY_PER_REQUEST
+
+    # Focus Scores Table
+    FocusScoresTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.FOCUS_SCORES_TABLE}
+        AttributeDefinitions:
+          - AttributeName: scoreId
+            AttributeType: S
+          - AttributeName: sessionId
+            AttributeType: S
+          - AttributeName: timestamp
+            AttributeType: S
+        KeySchema:
+          - AttributeName: scoreId
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: SessionScores
+            KeySchema:
+              - AttributeName: sessionId
+                KeyType: HASH
+              - AttributeName: timestamp
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+            BillingMode: PAY_PER_REQUEST
+        BillingMode: PAY_PER_REQUEST
+
+    # Groups Table
+    GroupsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.GROUPS_TABLE}
+        AttributeDefinitions:
+          - AttributeName: groupId
+            AttributeType: S
+          - AttributeName: createdBy
+            AttributeType: S
+        KeySchema:
+          - AttributeName: groupId
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: CreatedByIndex
+            KeySchema:
+              - AttributeName: createdBy
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            BillingMode: PAY_PER_REQUEST
+        BillingMode: PAY_PER_REQUEST
+
+    # Group Members Table
+    GroupMembersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.GROUP_MEMBERS_TABLE}
+        AttributeDefinitions:
+          - AttributeName: membershipId
+            AttributeType: S
+          - AttributeName: groupId
+            AttributeType: S
+          - AttributeName: userId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: membershipId
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: GroupMembers
+            KeySchema:
+              - AttributeName: groupId
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            BillingMode: PAY_PER_REQUEST
+          - IndexName: UserGroups
+            KeySchema:
+              - AttributeName: userId
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            BillingMode: PAY_PER_REQUEST
+        BillingMode: PAY_PER_REQUEST
+
+  Outputs:
+    ApiGatewayRestApiId:
+      Value:
+        Ref: ApiGatewayRestApi
+      Export:
+        Name: ${self:service}-${self:provider.stage}-RestApiId
+
+    ApiGatewayRestApiRootResourceId:
+      Value:
+        Fn::GetAtt:
+          - ApiGatewayRestApi
+          - RootResourceId
+      Export:
+        Name: ${self:service}-${self:provider.stage}-RootResourceId
+
+    ServiceEndpoint:
+      Description: URL of the service endpoint
+      Value:
+        Fn::Join:
+          - ""
+          - - "https://"
+            - Ref: ApiGatewayRestApi
+            - ".execute-api."
+            - ${self:provider.region}
+            - ".amazonaws.com/"
+            - ${self:provider.stage}
+      Export:
+        Name: ${self:service}-${self:provider.stage}-ServiceEndpoint
