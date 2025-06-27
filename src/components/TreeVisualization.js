@@ -174,14 +174,15 @@ function TreeVisualization({ level = 1, animated = true }) {
           x={size / 2}
           y={20}
           textAnchor="middle"
-          className="text-sm font-bold fill-forest-green"
+          className="text-sm font-bold"
+          fill="var(--primary)"
         >
           Level {level}
         </text>
       </svg>
       
       {/* Growth animation styles */}
-      <style jsx>{`
+      <style dangerouslySetInnerHTML={{__html: `
         .animate-grow-trunk {
           animation: growTrunk 2s ease-out;
         }
@@ -241,7 +242,7 @@ function TreeVisualization({ level = 1, animated = true }) {
         .delay-400 { animation-delay: 400ms; }
         .delay-600 { animation-delay: 600ms; }
         .delay-800 { animation-delay: 800ms; }
-      `}</style>
+      `}} />
     </div>
   );
 }

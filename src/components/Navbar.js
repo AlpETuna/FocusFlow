@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { TreePine, Home, Target, Users, Trophy, UserCircle, LogOut, UsersRound } from 'lucide-react';
+import { TreePine, Home, Target, Users, Trophy, UserCircle, LogOut, Users2 } from 'lucide-react';
 
 function Navbar() {
   const { user, logout } = useAuth();
@@ -10,7 +10,7 @@ function Navbar() {
   const navItems = [
     { path: '/dashboard', label: 'Dashboard', icon: Home },
     { path: '/focus', label: 'Focus', icon: Target },
-    { path: '/groups', label: 'Groups', icon: UsersRound },
+    { path: '/groups', label: 'Groups', icon: Users2 },
     { path: '/friends', label: 'Friends', icon: Users },
     { path: '/leaderboard', label: 'Leaderboard', icon: Trophy },
   ];

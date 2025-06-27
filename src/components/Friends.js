@@ -100,17 +100,18 @@ function Friends() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-sky-blue to-grass-green">
-      <div className="grass-background"></div>
+    <div className="min-h-screen" style={{
+      background: 'linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 50%, #f0fff0 100%)'
+    }}>
       
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">
+          <h1 className="text-4xl font-bold mb-2" style={{color: 'var(--primary)'}}>
             <Users className="inline-block mr-3" size={40} />
             Friends
           </h1>
-          <p className="text-lg text-cream">
+          <p className="text-lg" style={{color: 'var(--text-secondary)'}}>
             Connect with study buddies and grow together
           </p>
         </div>
@@ -119,9 +120,9 @@ function Friends() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Friends List */}
             <div className="lg:col-span-2">
-              <div className="compact-card mb-6">
+              <div className="card mb-6">
                 <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-xl font-bold text-forest-green">Your Friends ({friends.length})</h2>
+                  <h2 className="text-xl font-bold text-primary">Your Friends ({friends.length})</h2>
                   <button
                     onClick={() => setShowAddFriend(true)}
                     className="btn btn-primary text-sm px-4 py-2"
@@ -133,7 +134,7 @@ function Friends() {
 
                 {/* Search Bar */}
                 <div className="relative mb-4">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-leaf-green" size={20} />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-secondary" size={20} />
                   <input
                     type="text"
                     placeholder="Search friends..."
@@ -144,17 +145,17 @@ function Friends() {
                 </div>
 
                 {/* Friends Grid */}
-                <div className="friends-grid">
+                <div className="grid grid-cols-2 gap-4">
                   {filteredFriends.map(friend => (
-                    <div key={friend.id} className="friend-card">
+                    <div key={friend.id} className="card p-4">
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex items-center space-x-3">
                           <div className="friend-avatar">
                             {friend.name.charAt(0)}
                           </div>
                           <div>
-                            <h3 className="font-semibold text-forest-green">{friend.name}</h3>
-                            <p className="text-sm text-leaf-green">{friend.email}</p>
+                            <h3 className="font-semibold text-primary">{friend.name}</h3>
+                            <p className="text-sm text-secondary">{friend.email}</p>
                           </div>
                         </div>
                         <span className={`friend-status ${getStatusColor(friend.status)}`}>
@@ -163,24 +164,24 @@ function Friends() {
                       </div>
 
                       <div className="grid grid-cols-2 gap-3 mb-3">
-                        <div className="compact-stat">
-                          <div className="compact-stat-value">L{friend.treeLevel}</div>
-                          <div className="compact-stat-label">Tree Level</div>
+                        <div className="stat-card">
+                          <div className="stat-value">L{friend.treeLevel}</div>
+                          <div className="stat-label">Tree Level</div>
                         </div>
-                        <div className="compact-stat">
-                          <div className="compact-stat-value">{friend.focusStreak}</div>
-                          <div className="compact-stat-label">Day Streak</div>
+                        <div className="stat-card">
+                          <div className="stat-value">{friend.focusStreak}</div>
+                          <div className="stat-label">Day Streak</div>
                         </div>
                       </div>
 
                       {friend.status === 'studying' && friend.currentSession && (
-                        <div className="text-sm text-forest-green mb-2">
+                        <div className="text-sm text-primary mb-2">
                           📚 Studying: {friend.currentSession}
                         </div>
                       )}
 
                       <div className="flex justify-between items-center text-sm text-leaf-green">
-                        <span>Last seen: {friend.lastSeen}</span>
+                        <span className="text-secondary">Last seen: {friend.lastSeen}</span>
                         <button className="btn btn-outline text-xs px-2 py-1">
                           <MessageCircle size={12} />
                           Chat
@@ -196,18 +197,18 @@ function Friends() {
             <div className="space-y-6">
               {/* Friend Requests */}
               {friendRequests.length > 0 && (
-                <div className="compact-card">
-                  <h3 className="font-bold text-forest-green mb-4">Friend Requests</h3>
+                <div className="card">
+                  <h3 className="font-bold text-primary mb-4">Friend Requests</h3>
                   {friendRequests.map(request => (
-                    <div key={request.id} className="friend-card mb-3">
+                    <div key={request.id} className="card p-3 mb-3">
                       <div className="flex items-center space-x-3 mb-3">
                         <div className="friend-avatar text-sm">
                           {request.name.charAt(0)}
                         </div>
                         <div>
-                          <h4 className="font-semibold text-forest-green text-sm">{request.name}</h4>
-                          <p className="text-xs text-leaf-green">Tree Level {request.treeLevel}</p>
-                          <p className="text-xs text-leaf-green">{request.mutualFriends} mutual friends</p>
+                          <h4 className="font-semibold text-primary text-sm">{request.name}</h4>
+                          <p className="text-xs text-secondary">Tree Level {request.treeLevel}</p>
+                          <p className="text-xs text-secondary">{request.mutualFriends} mutual friends</p>
                         </div>
                       </div>
                       <div className="flex space-x-2">
@@ -227,29 +228,29 @@ function Friends() {
               )}
 
               {/* Quick Stats */}
-              <div className="compact-card">
-                <h3 className="font-bold text-forest-green mb-4">Your Stats</h3>
+              <div className="card">
+                <h3 className="font-bold text-primary mb-4">Your Stats</h3>
                 <div className="space-y-3">
-                  <div className="compact-stat">
-                    <div className="compact-stat-value">L{user?.treeLevel || 1}</div>
-                    <div className="compact-stat-label">Tree Level</div>
+                  <div className="stat-card">
+                    <div className="stat-value">L{user?.treeLevel || 1}</div>
+                    <div className="stat-label">Tree Level</div>
                   </div>
-                  <div className="compact-stat">
-                    <div className="compact-stat-value">{user?.focusStreak || 0}</div>
-                    <div className="compact-stat-label">Day Streak</div>
+                  <div className="stat-card">
+                    <div className="stat-value">{user?.focusStreak || 0}</div>
+                    <div className="stat-label">Day Streak</div>
                   </div>
-                  <div className="compact-stat">
-                    <div className="compact-stat-value">{Math.floor((user?.totalFocusTime || 0) / 60)}h</div>
-                    <div className="compact-stat-label">Total Focus Time</div>
+                  <div className="stat-card">
+                    <div className="stat-value">{Math.floor((user?.totalFocusTime || 0) / 60)}h</div>
+                    <div className="stat-label">Total Focus Time</div>
                   </div>
                 </div>
               </div>
 
               {/* Study Groups */}
-              <div className="compact-card">
-                <h3 className="font-bold text-forest-green mb-4">Study Groups</h3>
+              <div className="card">
+                <h3 className="font-bold text-primary mb-4">Study Groups</h3>
                 <div className="space-y-2">
-                  <div className="text-sm text-leaf-green text-center py-4">
+                  <div className="text-sm text-secondary text-center py-4">
                     <Users size={24} className="mx-auto mb-2 opacity-50" />
                     No study groups yet
                   </div>
@@ -267,7 +268,7 @@ function Friends() {
         {showAddFriend && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-              <h3 className="text-xl font-bold text-forest-green mb-4">Add Friend</h3>
+              <h3 className="text-xl font-bold text-primary mb-4">Add Friend</h3>
               <div className="space-y-4">
                 <div>
                   <label className="form-label">Friend's Email</label>

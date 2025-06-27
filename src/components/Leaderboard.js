@@ -147,17 +147,17 @@ function Leaderboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-sky-blue to-grass-green">
-      <div className="grass-background"></div>
-      
+    <div className="min-h-screen" style={{
+      background: 'linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 50%, #f0fff0 100%)'
+    }}>
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">
+          <h1 className="text-4xl font-bold mb-2" style={{color: 'var(--primary)'}}>
             <Trophy className="inline-block mr-3" size={40} />
             Leaderboard
           </h1>
-          <p className="text-lg text-cream">
+          <p className="text-lg" style={{color: 'var(--text-secondary)'}}>
             Compete with friends and climb the rankings
           </p>
         </div>
@@ -166,7 +166,7 @@ function Leaderboard() {
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             {/* Main Leaderboard */}
             <div className="lg:col-span-3">
-              <div className="compact-card mb-6">
+              <div className="card mb-6">
                 {/* Filters */}
                 <div className="flex flex-col sm:flex-row gap-4 mb-6">
                   <div className="flex-1">
@@ -206,7 +206,9 @@ function Leaderboard() {
                       key={item.id}
                       className={`text-center ${index === 0 ? 'order-2' : index === 1 ? 'order-1' : 'order-3'}`}
                     >
-                      <div className={`podium-step ${index === 0 ? 'h-24' : index === 1 ? 'h-20' : 'h-16'} bg-gradient-to-t from-sage-green to-light-green rounded-t-lg mb-4 flex items-end justify-center pb-2`}>
+                      <div className={`${index === 0 ? 'h-24' : index === 1 ? 'h-20' : 'h-16'} rounded-t-lg mb-4 flex items-end justify-center pb-2`} style={{
+                        background: 'linear-gradient(to top, var(--accent), var(--accent-light))'
+                      }}>
                         <div className="text-white font-bold text-2xl">
                           {index + 1}
                         </div>
@@ -214,8 +216,8 @@ function Leaderboard() {
                       <div className="friend-avatar mx-auto mb-2">
                         {item.avatar}
                       </div>
-                      <h3 className="font-bold text-forest-green text-sm">{item.name}</h3>
-                      <p className="text-xs text-leaf-green">{getMetricValue(item)}</p>
+                      <h3 className="font-bold text-primary text-sm">{item.name}</h3>
+                      <p className="text-xs text-secondary">{getMetricValue(item)}</p>
                       {index === 0 && <Trophy className="mx-auto mt-1 text-yellow-500" size={20} />}
                       {index === 1 && <Medal className="mx-auto mt-1 text-gray-400" size={20} />}
                       {index === 2 && <Award className="mx-auto mt-1 text-orange-600" size={20} />}
@@ -225,15 +227,17 @@ function Leaderboard() {
 
                 {/* Full Leaderboard */}
                 <div className="space-y-2">
-                  <h3 className="font-bold text-forest-green mb-4">
+                  <h3 className="font-bold text-primary mb-4">
                     Full Rankings - {getMetricLabel()}
                   </h3>
                   {leaderboardData.map((item, index) => (
                     <div
                       key={item.id}
-                      className={`leaderboard-item ${item.isCurrentUser ? 'bg-light-green bg-opacity-20 border-2 border-light-green' : ''}`}
+                      className={`flex items-center p-4 rounded-lg transition-all ${item.isCurrentUser ? 'bg-success bg-opacity-10 border-2 border-success' : 'hover:bg-gray-50'}`}
                     >
-                      <div className={`leaderboard-rank ${getRankClass(item.rank)}`}>
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold mr-4 ${getRankClass(item.rank)}`} style={{
+                        backgroundColor: item.rank <= 3 ? 'var(--primary)' : 'var(--text-secondary)'
+                      }}>
                         {item.rank}
                       </div>
                       
@@ -244,13 +248,13 @@ function Leaderboard() {
                       <div className="flex-1">
                         <div className="flex items-center justify-between">
                           <div>
-                            <h4 className="font-semibold text-forest-green">
+                            <h4 className="font-semibold text-primary">
                               {item.name} {item.isCurrentUser && '(You)'}
                             </h4>
-                            <p className="text-sm text-leaf-green">Tree Level {item.treeLevel}</p>
+                            <p className="text-sm text-secondary">Tree Level {item.treeLevel}</p>
                           </div>
                           <div className="text-right">
-                            <div className="font-bold text-forest-green">
+                            <div className="font-bold text-primary">
                               {getMetricValue(item)}
                             </div>
                             <div className={`text-xs ${item.change.startsWith('+') ? 'text-green-600' : item.change.startsWith('-') ? 'text-red-600' : 'text-gray-600'}`}>
@@ -268,29 +272,29 @@ function Leaderboard() {
             {/* Sidebar */}
             <div className="space-y-6">
               {/* Your Rank */}
-              <div className="compact-card">
-                <h3 className="font-bold text-forest-green mb-4">Your Ranking</h3>
+              <div className="card">
+                <h3 className="font-bold text-primary mb-4">Your Ranking</h3>
                 <div className="text-center">
                   <div className="friend-avatar mx-auto mb-3">
                     {(user?.name || 'Y').charAt(0)}
                   </div>
-                  <div className="text-2xl font-bold text-forest-green mb-1">#{leaderboardData.find(item => item.isCurrentUser)?.rank || 5}</div>
-                  <div className="text-sm text-leaf-green mb-3">out of {leaderboardData.length} friends</div>
+                  <div className="text-2xl font-bold text-primary mb-1">#{leaderboardData.find(item => item.isCurrentUser)?.rank || 5}</div>
+                  <div className="text-sm text-secondary mb-3">out of {leaderboardData.length} friends</div>
                   <div className="text-xs text-green-600">↗ +3 this week</div>
                 </div>
               </div>
 
               {/* Achievement Badges */}
-              <div className="compact-card">
-                <h3 className="font-bold text-forest-green mb-4">Recent Achievements</h3>
+              <div className="card">
+                <h3 className="font-bold text-primary mb-4">Recent Achievements</h3>
                 <div className="space-y-3">
                   <div className="flex items-center space-x-3">
                     <div className="w-8 h-8 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
                       <Trophy size={16} className="text-white" />
                     </div>
                     <div>
-                      <div className="text-sm font-semibold text-forest-green">First Place</div>
-                      <div className="text-xs text-leaf-green">Weekly focus time</div>
+                      <div className="text-sm font-semibold text-primary">First Place</div>
+                      <div className="text-xs text-secondary">Weekly focus time</div>
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
@@ -298,8 +302,8 @@ function Leaderboard() {
                       <Award size={16} className="text-white" />
                     </div>
                     <div>
-                      <div className="text-sm font-semibold text-forest-green">Streak Master</div>
-                      <div className="text-xs text-leaf-green">7 day streak</div>
+                      <div className="text-sm font-semibold text-primary">Streak Master</div>
+                      <div className="text-xs text-secondary">7 day streak</div>
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
@@ -307,25 +311,25 @@ function Leaderboard() {
                       <TreePine size={16} className="text-white" />
                     </div>
                     <div>
-                      <div className="text-sm font-semibold text-forest-green">Tree Grower</div>
-                      <div className="text-xs text-leaf-green">Reached level 5</div>
+                      <div className="text-sm font-semibold text-primary">Tree Grower</div>
+                      <div className="text-xs text-secondary">Reached level 5</div>
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Competitive Challenges */}
-              <div className="compact-card">
-                <h3 className="font-bold text-forest-green mb-4">Active Challenges</h3>
+              <div className="card">
+                <h3 className="font-bold text-primary mb-4">Active Challenges</h3>
                 <div className="space-y-3">
-                  <div className="p-3 bg-light-green bg-opacity-20 rounded-lg">
+                  <div className="p-3 bg-success bg-opacity-10 rounded-lg">
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm font-semibold text-forest-green">Weekly Sprint</span>
-                      <span className="text-xs text-leaf-green">3 days left</span>
+                      <span className="text-sm font-semibold text-primary">Weekly Sprint</span>
+                      <span className="text-xs text-secondary">3 days left</span>
                     </div>
-                    <div className="text-xs text-leaf-green mb-2">Beat your friends this week</div>
-                    <div className="w-full bg-sage-green bg-opacity-30 rounded-full h-2">
-                      <div className="bg-light-green h-2 rounded-full" style={{ width: '70%' }}></div>
+                    <div className="text-xs text-secondary mb-2">Beat your friends this week</div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div className="bg-success h-2 rounded-full" style={{ width: '70%' }}></div>
                     </div>
                   </div>
                   <button className="btn btn-outline text-sm w-full">

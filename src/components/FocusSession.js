@@ -118,9 +118,8 @@ function FocusSession() {
       if (sessionType === 'focus') {
         // Start a new focus session in the backend
         const response = await api.startFocusSession(
-          getFocusTime(),
-          'focus',
-          `${selectedPreset} session`
+          null, // groupId
+          `${selectedPreset} session` // goal
         );
         
         if (response.success) {

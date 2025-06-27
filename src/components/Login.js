@@ -44,18 +44,18 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="grass-background"></div>
-      
+    <div className="min-h-screen flex items-center justify-center p-4" style={{
+      background: 'linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 50%, #f0fff0 100%)'
+    }}>
       <div className="card w-full max-w-md">
-        <div className="card-header">
+        <div className="text-center mb-6">
           <div className="flex items-center justify-center mb-4">
-            <TreePine size={48} className="text-forest-green" />
+            <TreePine size={48} className="text-primary" />
           </div>
-          <h1 className="card-title">
+          <h1 className="text-2xl font-bold text-primary mb-2">
             {isLogin ? 'Welcome Back' : 'Join FocusFlow'}
           </h1>
-          <p className="card-subtitle">
+          <p className="text-secondary">
             {isLogin 
               ? 'Continue growing your focus tree' 
               : 'Start your journey to better focus'
