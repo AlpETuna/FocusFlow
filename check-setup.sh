@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# FocusFlow Setup Verification Script
+# Root Focus Setup Verification Script
 # Checks if all prerequisites are installed and configured
 
-echo "🔍 FocusFlow Setup Verification"
+echo "🔍 Root Focus Setup Verification"
 echo "=============================="
 
 # Check Node.js

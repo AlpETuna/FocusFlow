@@ -1,9 +1,9 @@
-// API service for FocusFlow backend communication
+// API service for Root Focus backend communication
 
-class FocusFlowAPI {
+class RootFocusAPI {
   constructor(baseURL = process.env.REACT_APP_API_URL || 'https://your-api-gateway-url.amazonaws.com/dev') {
     this.baseURL = baseURL;
-    this.token = localStorage.getItem('focusflow_token');
+    this.token = localStorage.getItem('rootfocus_token');
   }
 
   // Set authentication token
@@ -204,9 +204,9 @@ class FocusFlowAPI {
 }
 
 // Create singleton instance
-const api = new FocusFlowAPI();
+const api = new RootFocusAPI();
 
 export default api;
 
 // Export class for testing or multiple instances
-export { FocusFlowAPI };
+export { RootFocusAPI };

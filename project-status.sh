@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# FocusFlow Project Status Display
+# Root Focus Project Status Display
 # Shows the complete project structure and readiness status
 
-echo "🎯 FocusFlow - Production Ready Status"
+echo "🎯 Root Focus - Production Ready Status"
 echo "====================================="
 echo ""
 
@@ -178,5 +178,5 @@ else
 fi
 
 echo ""
-echo "🎯 Your FocusFlow application is ready for production deployment!"
+echo "🎯 Your Root Focus application is ready for production deployment!"
 echo "Built with AWS Serverless Architecture for scalability and cost-efficiency."

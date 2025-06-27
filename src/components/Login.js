@@ -58,7 +58,7 @@ function Login() {
             <TreePine size={48} style={{ color: 'var(--primary)' }} />
           </div>
           <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '8px' }}>
-            {isLogin ? 'Welcome Back' : 'Join FocusFlow'}
+            {isLogin ? 'Welcome Back' : 'Join Root Focus'}
           </h1>
           <p style={{ color: 'var(--text-secondary)' }}>
             {isLogin

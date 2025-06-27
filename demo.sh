@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# FocusFlow Quick Demo Script
+# Root Focus Quick Demo Script
 # Serves the built application locally for demonstration
 
-echo "🎬 FocusFlow Quick Demo"
+echo "🎬 Root Focus Quick Demo"
 echo "======================"
 echo ""
 

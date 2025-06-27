@@ -1,4 +1,4 @@
-service: focusflow-backend
+service: rootfocus-backend
 
 frameworkVersion: '3'
 

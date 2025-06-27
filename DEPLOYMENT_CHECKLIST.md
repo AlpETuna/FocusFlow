@@ -1,6 +1,6 @@
-# 🚀 FocusFlow AWS Deployment Checklist
+# 🚀 Root Focus AWS Deployment Checklist
 
-Your FocusFlow application is now **COMPLETE** and ready for AWS deployment! Here's exactly what you need to do:
+Your Root Focus application is now **COMPLETE** and ready for AWS deployment! Here's exactly what you need to do:
 
 ## ✅ What's Already Configured
 
@@ -147,13 +147,13 @@ After deployment, upload the `build/` folder to any of these services:
 ### Option C: AWS S3 + CloudFront
 ```bash
 # Create S3 bucket
-aws s3 mb s3://your-focusflow-app-bucket
+aws s3 mb s3://your-rootfocus-app-bucket
 
 # Upload build files
-aws s3 sync build/ s3://your-focusflow-app-bucket
+aws s3 sync build/ s3://your-rootfocus-app-bucket
 
 # Enable static website hosting
-aws s3 website s3://your-focusflow-app-bucket --index-document index.html
+aws s3 website s3://your-rootfocus-app-bucket --index-document index.html
 ```
 
 ## 📋 Files That Are Ready (No Changes Needed)
@@ -219,7 +219,7 @@ Before running `./deploy.sh`, verify:
 - [ ] Bedrock Claude 3 Sonnet access enabled
 - [ ] Node.js 18+ installed
 - [ ] Serverless Framework installed globally
-- [ ] You're in the FocusFlow project directory
+- [ ] You're in the Root Focus project directory
 
 ## 🎉 After Deployment
 
@@ -231,6 +231,6 @@ Before running `./deploy.sh`, verify:
 
 ---
 
-**Your FocusFlow app is PRODUCTION READY! 🚀**
+**Your Root Focus app is PRODUCTION READY! 🚀**
 
 Just fill in your AWS credentials and run `./deploy.sh`

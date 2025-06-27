@@ -22,7 +22,7 @@ function Navbar() {
       <div className="navbar-content">
         <Link to="/dashboard" className="navbar-brand">
           <TreePine size={24} />
-          FocusFlow
+          Root Focus
         </Link>
 
         <div className="navbar-nav">

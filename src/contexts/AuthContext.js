@@ -15,7 +15,7 @@ export function AuthProvider({ children }) {
     const initializeAuth = async () => {
       try {
         // Check if we have a stored user or create a mock one
-        const mockUser = localStorage.getItem('focusflow_mock_user');
+        const mockUser = localStorage.getItem('rootfocus_mock_user');
         if (mockUser) {
           setUser(JSON.parse(mockUser));
         } else {
@@ -23,14 +23,14 @@ export function AuthProvider({ children }) {
           const sampleUser = {
             id: 'mock-user-1',
             name: 'Demo User',
-            email: 'demo@focusflow.com',
+            email: 'demo@rootfocus.com',
             totalFocusTime: 245, // minutes
             focusStreak: 7,
             treeLevel: 5,
             sessionsToday: 3,
             joinedDate: new Date().toISOString()
           };
-          localStorage.setItem('focusflow_mock_user', JSON.stringify(sampleUser));
+          localStorage.setItem('rootfocus_mock_user', JSON.stringify(sampleUser));
           setUser(sampleUser);
         }
       } catch (error) {
@@ -60,7 +60,7 @@ export function AuthProvider({ children }) {
         joinedDate: new Date().toISOString()
       };
       
-      localStorage.setItem('focusflow_mock_user', JSON.stringify(mockUser));
+      localStorage.setItem('rootfocus_mock_user', JSON.stringify(mockUser));
       setUser(mockUser);
       return { success: true };
     } catch (error) {
@@ -84,7 +84,7 @@ export function AuthProvider({ children }) {
         joinedDate: new Date().toISOString()
       };
       
-      localStorage.setItem('focusflow_mock_user', JSON.stringify(mockUser));
+      localStorage.setItem('rootfocus_mock_user', JSON.stringify(mockUser));
       setUser(mockUser);
       return { success: true };
     } catch (error) {
@@ -93,7 +93,7 @@ export function AuthProvider({ children }) {
   };
 
   const logout = () => {
-    localStorage.removeItem('focusflow_mock_user');
+    localStorage.removeItem('rootfocus_mock_user');
     setUser(null);
   };
 
@@ -103,7 +103,7 @@ export function AuthProvider({ children }) {
       await new Promise(resolve => setTimeout(resolve, 500));
       
       const updatedUser = { ...user, ...updates };
-      localStorage.setItem('focusflow_mock_user', JSON.stringify(updatedUser));
+      localStorage.setItem('rootfocus_mock_user', JSON.stringify(updatedUser));
       setUser(updatedUser);
       return { success: true };
     } catch (error) {
@@ -115,7 +115,7 @@ export function AuthProvider({ children }) {
   const refreshUser = async () => {
     try {
       // Mock refresh - get from localStorage
-      const mockUser = localStorage.getItem('focusflow_mock_user');
+      const mockUser = localStorage.getItem('rootfocus_mock_user');
       if (mockUser) {
         setUser(JSON.parse(mockUser));
       }

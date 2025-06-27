@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# FocusFlow Deployment Script
-# This script deploys the complete FocusFlow application
+# Root Focus Deployment Script
+# This script deploys the complete Root Focus application
 
 set -e
 
-echo "🚀 Starting FocusFlow Deployment..."
+echo "🚀 Starting Root Focus Deployment..."
 
 # Check if environment files exist
 if [ ! -f "backend/.env" ]; then
@@ -78,7 +78,7 @@ npm run deploy-prod
 
 # Extract API Gateway URL from deployment output
 echo "🔍 Extracting API Gateway URL..."
-API_URL=$(aws cloudformation list-exports --query "Exports[?Name=='focusflow-backend-prod-ServiceEndpoint'].Value" --output text)
+API_URL=$(aws cloudformation list-exports --query "Exports[?Name=='rootfocus-backend-prod-ServiceEndpoint'].Value" --output text)
 
 if [ -z "$API_URL" ]; then
     echo "⚠️  Could not automatically extract API URL. Please check the deployment output above."
@@ -110,7 +110,7 @@ echo "✅ Frontend built successfully!"
 
 # Display deployment summary
 echo ""
-echo "🎉 FocusFlow Deployment Complete!"
+echo "🎉 Root Focus Deployment Complete!"
 echo "================================="
 echo "Backend API URL: $API_URL"
 echo "Frontend build ready in: ./build/"

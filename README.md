@@ -62,7 +62,7 @@ A modern focus and productivity app that transforms study sessions into a growin
 ```bash
 # 1. Clone and setup environment
 git clone <repository-url>
-cd FocusFlow
+cd RootFocus
 ./setup.sh
 
 # 2. Set AWS credentials
@@ -218,7 +218,7 @@ npm run serve  # Serves build folder at localhost:3000
 ## 📁 Project Structure
 
 ```
-FocusFlow/
+RootFocus/
 ├── setup.sh                    # Environment setup script
 ├── deploy.sh                   # Automated deployment
 ├── check-setup.sh             # Setup verification

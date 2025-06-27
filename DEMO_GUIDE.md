@@ -1,6 +1,6 @@
-# 🎬 FocusFlow Demo Guide
+# 🎬 Root Focus Demo Guide
 
-Since your application is production-ready, here are multiple ways to demo FocusFlow:
+Since your application is production-ready, here are multiple ways to demo Root Focus:
 
 ## 🚀 Quick Demo Options
 
@@ -88,7 +88,7 @@ cd backend && npm run dev  # Backend locally
 ## 🎬 Demo Script
 
 ### 1. Landing Page (30 seconds)
-- "Welcome to FocusFlow - AI-powered focus tracking"
+- "Welcome to Root Focus - AI-powered focus tracking"
 - Show modern, animated landing page
 - Highlight key features with smooth animations
 
@@ -200,11 +200,11 @@ If you can't deploy the backend, you can still demo the frontend:
 
 Once deployed, you can create instant demo accounts:
 ```
-Demo User 1: demo1@focusflow.com / demo123
-Demo User 2: demo2@focusflow.com / demo123
+Demo User 1: demo1@rootfocus.com / demo123
+Demo User 2: demo2@rootfocus.com / demo123
 Demo Group: "ProductivityMasters"
 ```
 
 ---
 
-**🎬 Your FocusFlow demo will showcase a production-ready, AI-powered productivity platform that's ready for real-world deployment!**
+**🎬 Your Root Focus demo will showcase a production-ready, AI-powered productivity platform that's ready for real-world deployment!**

@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# FocusFlow Setup Script
+# Root Focus Setup Script
 # This script helps set up the environment files securely
 
-echo "🚀 Setting up FocusFlow for development/deployment..."
+echo "🚀 Setting up Root Focus for development/deployment..."
 
 # Create environment files from templates
 if [ ! -f "backend/.env" ]; then

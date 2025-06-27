@@ -1,4 +1,4 @@
-# 🎬 FocusFlow Demo Options - Quick Reference
+# 🎬 Root Focus Demo Options - Quick Reference
 
 ## 🚀 Instant Demo (Right Now!)
 
@@ -85,7 +85,7 @@ export AWS_SECRET_ACCESS_KEY=your-secret
 ## 🎬 Demo Presentation Tips
 
 ### 30-Second Pitch
-*"This is FocusFlow - an AI-powered productivity app that uses machine learning to analyze your screen and help you stay focused. It features real-time focus scoring, social accountability through groups, and beautiful progress visualization. Built with modern React and AWS serverless architecture."*
+*"This is Root Focus - an AI-powered productivity app that uses machine learning to analyze your screen and help you stay focused. It features real-time focus scoring, social accountability through groups, and beautiful progress visualization. Built with modern React and AWS serverless architecture."*
 
 ### Key Points to Highlight
 1. **AI-Powered**: "Uses Claude 3 Sonnet for intelligent screen analysis"

@@ -1,7 +1,7 @@
 {
-  "name": "focusflow-backend",
+  "name": "rootfocus-backend",
   "version": "1.0.0",
-  "description": "FocusFlow serverless backend",
+  "description": "Root Focus serverless backend",
   "main": "index.js",
   "scripts": {
     "deploy-dev": "serverless deploy --stage dev",
@@ -22,6 +22,6 @@
     "serverless": "^3.38.0",
     "serverless-dotenv-plugin": "^6.0.0"
   },
-  "author": "FocusFlow",
+  "author": "Root Focus",
   "license": "MIT"
 }

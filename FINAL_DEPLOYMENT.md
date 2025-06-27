@@ -1,6 +1,6 @@
-# 🚀 FocusFlow - Final Deployment Guide
+# 🚀 Root Focus - Final Deployment Guide
 
-This guide will help you deploy the complete FocusFlow application with all necessary configurations filled in.
+This guide will help you deploy the complete Root Focus application with all necessary configurations filled in.
 
 ## 📋 Prerequisites Checklist
 
@@ -44,8 +44,8 @@ aws configure
 ### Step 3: Deploy Everything
 
 ```bash
-# Make sure you're in the FocusFlow directory
-cd /path/to/FocusFlow
+# Make sure you're in the Root Focus directory
+cd /path/to/RootFocus
 
 # Run the automated deployment script
 ./deploy.sh
@@ -69,7 +69,7 @@ cd /path/to/FocusFlow
 ## 📁 Project Structure
 
 ```
-FocusFlow/
+RootFocus/
 ├── deploy.sh                 # Automated deployment script
 ├── .env                     # Frontend environment (API URL)
 ├── backend/
@@ -144,23 +144,23 @@ npm run build
 ### Option C: AWS S3 + CloudFront
 ```bash
 # Create S3 bucket
-aws s3 mb s3://your-focusflow-bucket
+aws s3 mb s3://your-rootfocus-bucket
 
 # Enable static website hosting
-aws s3 website s3://your-focusflow-bucket --index-document index.html
+aws s3 website s3://your-rootfocus-bucket --index-document index.html
 
 # Upload build files
-aws s3 sync build/ s3://your-focusflow-bucket
+aws s3 sync build/ s3://your-rootfocus-bucket
 
 # Set public read policy
-aws s3api put-bucket-policy --bucket your-focusflow-bucket --policy '{
+aws s3api put-bucket-policy --bucket your-rootfocus-bucket --policy '{
   "Version": "2012-10-17",
   "Statement": [{
     "Sid": "PublicReadGetObject",
     "Effect": "Allow",
     "Principal": "*",
     "Action": "s3:GetObject",
-    "Resource": "arn:aws:s3:::your-focusflow-bucket/*"
+    "Resource": "arn:aws:s3:::your-rootfocus-bucket/*"
   }]
 }'
 ```
@@ -193,11 +193,11 @@ serverless logs -t
 
 ### DynamoDB Tables
 Check the AWS Console for these tables:
-- `focusflow-backend-prod-users`
-- `focusflow-backend-prod-focus-sessions`
-- `focusflow-backend-prod-focus-scores`
-- `focusflow-backend-prod-groups`
-- `focusflow-backend-prod-group-members`
+- `rootfocus-backend-prod-users`
+- `rootfocus-backend-prod-focus-sessions`
+- `rootfocus-backend-prod-focus-scores`
+- `rootfocus-backend-prod-groups`
+- `rootfocus-backend-prod-group-members`
 
 ## 💰 Cost Estimation
 
@@ -250,4 +250,4 @@ If you encounter issues:
 
 ---
 
-**🎯 Your FocusFlow application is now ready for production use!**
+**🎯 Your Root Focus application is now ready for production use!**

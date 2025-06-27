@@ -1,4 +1,4 @@
-// Screen capture utility for FocusFlow
+// Screen capture utility for Root Focus
 // Integrates with browser APIs for screen recording and analysis
 
 class ScreenCaptureManager {
@@ -244,7 +244,7 @@ class FocusAnalysisAPI {
 }
 
 // Main integration class
-export class FocusFlowScreenAnalysis {
+export class RootFocusScreenAnalysis {
   constructor(apiBaseURL, authToken) {
     this.screenCapture = new ScreenCaptureManager();
     this.analysisAPI = new FocusAnalysisAPI(apiBaseURL, authToken);
@@ -319,4 +319,4 @@ export class FocusFlowScreenAnalysis {
   }
 }
 
-export default FocusFlowScreenAnalysis;
+export default RootFocusScreenAnalysis;

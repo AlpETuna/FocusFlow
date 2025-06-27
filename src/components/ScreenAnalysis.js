@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FocusFlowScreenAnalysis } from '../utils/screenCapture';
+import { RootFocusScreenAnalysis } from '../utils/screenCapture';
 import api from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
 import { Monitor, Shield, AlertCircle } from 'lucide-react';
@@ -25,7 +25,7 @@ const ScreenAnalysis = ({ sessionId, onAnalysisResult, isActive = false }) => {
           return;
         }
 
-        const analysis = new FocusFlowScreenAnalysis(apiBaseURL, token);
+        const analysis = new RootFocusScreenAnalysis(apiBaseURL, token);
         await analysis.initialize();
         
         // Set up analysis result callback

@@ -1,6 +1,6 @@
-# 🎉 FocusFlow - Final Deployment Package
+# 🎉 Root Focus - Final Deployment Package
 
-Your FocusFlow application is now **PRODUCTION READY** with all necessary configurations and deployment scripts!
+Your Root Focus application is now **PRODUCTION READY** with all necessary configurations and deployment scripts!
 
 ## 📦 What's Included
 
@@ -96,9 +96,9 @@ Deploy the `build/` folder to any of these services:
 #### Option C: AWS S3
 ```bash
 # Create bucket and upload
-aws s3 mb s3://your-focusflow-bucket
-aws s3 sync build/ s3://your-focusflow-bucket
-aws s3 website s3://your-focusflow-bucket --index-document index.html
+aws s3 mb s3://your-rootfocus-bucket
+aws s3 sync build/ s3://your-rootfocus-bucket
+aws s3 website s3://your-rootfocus-bucket --index-document index.html
 ```
 
 ## 🎯 Features Included
@@ -197,7 +197,7 @@ GENERATE_SOURCEMAP=false
 
 ## 🏁 Final Notes
 
-**Your FocusFlow application is PRODUCTION READY!**
+**Your Root Focus application is PRODUCTION READY!**
 
 This package includes:
 - ✅ Complete, tested codebase
@@ -215,7 +215,7 @@ This package includes:
 2. Set AWS credentials
 3. Run `./deploy.sh`
 4. Deploy frontend to hosting service
-5. Enjoy your production FocusFlow app!
+5. Enjoy your production Root Focus app!
 
 ---
 
