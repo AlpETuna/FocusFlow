@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { TreePine, Smartphone, Brain, Users, Trophy, LogIn } from 'lucide-react';
+import { TreePine, Brain, Trophy, LogIn } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 function LaunchPage() {
