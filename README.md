@@ -5,6 +5,12 @@ A modern focus and productivity app that transforms study sessions into a growin
 ![FocusFlow](https://img.shields.io/badge/version-2.0-green)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
+## 🌐 Live Demo
+
+**Try the live app**: [https://root-flow.netlify.app/dashboard](https://root-flow.netlify.app/dashboard)
+
+*Experience FocusFlow in action with real-time screen analysis and collaborative group trees!*
+
 ## ✨ Features
 
 ### 🧠 AI-Powered Focus Monitoring
@@ -96,9 +102,6 @@ export MY_AWS_DEFAULT_REGION=us-east-1
 
 3. **Deployment**
    ```bash
-   # Verify setup
-   ./check-setup.sh
-   
    # Deploy backend and frontend
    ./deploy.sh
    ```
@@ -211,19 +214,17 @@ npm run serve  # Serves build folder at localhost:3000
 - **CORS Errors**: Verify API Gateway URL in frontend .env
 
 ### Get Help
-1. Run `./check-setup.sh` to verify configuration
-2. Check `DEPLOYMENT_CHECKLIST.md` for detailed troubleshooting
-3. Review CloudWatch logs for backend errors
+1. Review CloudWatch logs for backend errors
+2. Check environment variable configuration
+3. Verify AWS Bedrock access is enabled
 
 ## 📁 Project Structure
 
 ```
-RootFocus/
-├── setup.sh                    # Environment setup script
-├── deploy.sh                   # Automated deployment
-├── check-setup.sh             # Setup verification
-├── DEPLOYMENT_CHECKLIST.md    # Detailed deployment guide
-├── .env.example               # Frontend environment template
+FocusFlow/
+├── setup.sh                  # Environment setup script
+├── deploy.sh                 # Automated deployment
+├── .env.example              # Frontend environment template
 ├── backend/
 │   ├── .env.example          # Backend environment template
 │   ├── serverless.yml        # AWS deployment configuration
@@ -269,9 +270,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 # Quick start
 ./setup.sh
 ./deploy.sh
-
-# Check setup first
-./check-setup.sh
 ```
 
 **Built with ❤️ using AWS Serverless Architecture - Secure & Production Ready! 🚀**
