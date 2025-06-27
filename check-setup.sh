@@ -52,16 +52,16 @@ else
 fi
 
 # Check AWS credentials
-if [ -n "$AWS_ACCESS_KEY_ID" ] && [ -n "$AWS_SECRET_ACCESS_KEY" ]; then
+if [ -n "$MY_AWS_ACCESS_KEY_ID" ] && [ -n "$MY_AWS_SECRET_ACCESS_KEY" ]; then
     echo "✅ AWS credentials set via environment variables"
 elif aws configure list | grep -q "access_key"; then
     echo "✅ AWS credentials configured via aws configure"
 else
     echo "⚠️  AWS credentials not configured"
     echo "🔧 Set credentials with:"
-    echo "   export AWS_ACCESS_KEY_ID=your-key"
-    echo "   export AWS_SECRET_ACCESS_KEY=your-secret"
-    echo "   export AWS_DEFAULT_REGION=us-east-1"
+    echo "   export MY_AWS_ACCESS_KEY_ID=your-key"
+    echo "   export MY_AWS_SECRET_ACCESS_KEY=your-secret"
+    echo "   export MY_AWS_DEFAULT_REGION=us-east-1"
     echo "   OR run: aws configure"
 fi
 
@@ -128,7 +128,7 @@ if command -v node &> /dev/null; then ((CHECKS_PASSED++)); fi
 if command -v npm &> /dev/null; then ((CHECKS_PASSED++)); fi
 if command -v serverless &> /dev/null || command -v sls &> /dev/null; then ((CHECKS_PASSED++)); fi
 if [ -f "$(pwd)/aws/dist/aws" ] || command -v aws &> /dev/null; then ((CHECKS_PASSED++)); fi
-if [ -n "$AWS_ACCESS_KEY_ID" ] || aws configure list | grep -q "access_key" 2>/dev/null; then ((CHECKS_PASSED++)); fi
+if [ -n "$MY_AWS_ACCESS_KEY_ID" ] || aws configure list | grep -q "access_key" 2>/dev/null; then ((CHECKS_PASSED++)); fi
 if [ -d "backend/node_modules" ]; then ((CHECKS_PASSED++)); fi
 if [ -d "node_modules" ]; then ((CHECKS_PASSED++)); fi
 if [ -f "backend/.env" ] && [ -f ".env" ]; then ((CHECKS_PASSED++)); fi

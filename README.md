@@ -66,9 +66,9 @@ cd RootFocus
 ./setup.sh
 
 # 2. Set AWS credentials
-export AWS_ACCESS_KEY_ID=your-access-key
-export AWS_SECRET_ACCESS_KEY=your-secret-key
-export AWS_DEFAULT_REGION=us-east-1
+export MY_AWS_ACCESS_KEY_ID=your-access-key
+export MY_AWS_SECRET_ACCESS_KEY=your-secret-key
+export MY_AWS_DEFAULT_REGION=us-east-1
 
 # 3. Enable AWS Bedrock access (Claude 3 Sonnet) in AWS Console
 

@@ -32,20 +32,25 @@ if grep -q "your-super-secure-jwt-secret-here" backend/.env; then
 fi
 
 # Check if AWS credentials are set
-if [ -z "$AWS_ACCESS_KEY_ID" ] || [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
+if [ -z "$MY_AWS_ACCESS_KEY_ID" ] || [ -z "$MY_AWS_SECRET_ACCESS_KEY" ]; then
     echo "❌ AWS credentials not found!"
     echo "Please set the following environment variables:"
-    echo "export AWS_ACCESS_KEY_ID=your-access-key-id"
-    echo "export AWS_SECRET_ACCESS_KEY=your-secret-access-key"
-    echo "export AWS_DEFAULT_REGION=us-east-1"
+    echo "export MY_AWS_ACCESS_KEY_ID=your-access-key-id"
+    echo "export MY_AWS_SECRET_ACCESS_KEY=your-secret-access-key"
+    echo "export MY_AWS_DEFAULT_REGION=us-east-1"
     exit 1
 fi
 
 # Set AWS region if not already set
-export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-east-1}
+export MY_AWS_DEFAULT_REGION=${MY_AWS_DEFAULT_REGION:-us-east-1}
 
 echo "✅ AWS credentials configured"
-echo "📍 Region: $AWS_DEFAULT_REGION"
+echo "📍 Region: $MY_AWS_DEFAULT_REGION"
+
+# Export standard AWS environment variables for AWS CLI and Serverless Framework
+export AWS_ACCESS_KEY_ID="$MY_AWS_ACCESS_KEY_ID"
+export AWS_SECRET_ACCESS_KEY="$MY_AWS_SECRET_ACCESS_KEY"
+export AWS_DEFAULT_REGION="$MY_AWS_DEFAULT_REGION"
 
 # Add AWS CLI to PATH
 export PATH=$PATH:$(pwd)/aws/dist

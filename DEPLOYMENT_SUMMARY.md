@@ -35,9 +35,9 @@ npm install -g serverless
 ### Step 2: AWS Credentials
 Set your AWS credentials:
 ```bash
-export AWS_ACCESS_KEY_ID=your-access-key-id
-export AWS_SECRET_ACCESS_KEY=your-secret-access-key
-export AWS_DEFAULT_REGION=us-east-1
+export MY_AWS_ACCESS_KEY_ID=your-access-key-id
+export MY_AWS_SECRET_ACCESS_KEY=your-secret-access-key
+export MY_AWS_DEFAULT_REGION=us-east-1
 ```
 
 ### Step 3: Deploy
@@ -141,7 +141,7 @@ For moderate usage (100-500 users):
 ```bash
 # backend/.env (ALREADY CONFIGURED)
 JWT_SECRET="secure-random-string-already-set"
-AWS_REGION=us-east-1
+MY_AWS_REGION=us-east-1
 ```
 
 ### Frontend Environment
@@ -158,8 +158,8 @@ GENERATE_SOURCEMAP=false
 
 1. **AWS Credentials Error**
    ```bash
-   export AWS_ACCESS_KEY_ID=your-key
-   export AWS_SECRET_ACCESS_KEY=your-secret
+   export MY_AWS_ACCESS_KEY_ID=your-key
+   export MY_AWS_SECRET_ACCESS_KEY=your-secret
    ```
 
 2. **Bedrock Access Denied**

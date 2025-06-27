@@ -32,8 +32,8 @@ Your demo script just started a Python server:
 ### AWS Deployment (Complete functionality)
 ```bash
 # Set your AWS credentials
-export AWS_ACCESS_KEY_ID=your-key
-export AWS_SECRET_ACCESS_KEY=your-secret
+export MY_AWS_ACCESS_KEY_ID=your-key
+export MY_AWS_SECRET_ACCESS_KEY=your-secret
 
 # Deploy everything
 ./deploy.sh

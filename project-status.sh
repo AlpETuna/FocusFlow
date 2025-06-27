@@ -165,7 +165,7 @@ if [ $READY_COUNT -ge 6 ]; then
     echo ""
     echo "🚀 NEXT STEPS:"
     echo "1. Install Node.js 18+ and Serverless Framework on your system"
-    echo "2. Set AWS credentials (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)"
+    echo "2. Set AWS credentials (MY_AWS_ACCESS_KEY_ID, MY_AWS_SECRET_ACCESS_KEY)"
     echo "3. Run: ./check-setup.sh"
     echo "4. Run: ./deploy.sh"
     echo "5. Deploy frontend build folder to hosting service"

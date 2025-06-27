@@ -40,8 +40,8 @@ npx serve -s build -l 3000
 ### Option A: Deploy to AWS (Full functionality)
 ```bash
 # Set AWS credentials
-export AWS_ACCESS_KEY_ID=your-key
-export AWS_SECRET_ACCESS_KEY=your-secret
+export MY_AWS_ACCESS_KEY_ID=your-key
+export MY_AWS_SECRET_ACCESS_KEY=your-secret
 
 # Deploy everything
 ./deploy.sh

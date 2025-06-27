@@ -40,9 +40,9 @@ JWT_SECRET=your-generated-jwt-secret-here
 You need to set these environment variables before deployment:
 
 ```bash
-export AWS_ACCESS_KEY_ID=your-aws-access-key-here
-export AWS_SECRET_ACCESS_KEY=your-aws-secret-access-key-here
-export AWS_DEFAULT_REGION=us-east-1
+export MY_AWS_ACCESS_KEY_ID=your-aws-access-key-here
+export MY_AWS_SECRET_ACCESS_KEY=your-aws-secret-access-key-here
+export MY_AWS_DEFAULT_REGION=us-east-1
 ```
 
 **How to get these:**
@@ -91,9 +91,9 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 # Copy the output and paste it as JWT_SECRET in backend/.env
 
 # 3. Set your AWS credentials (replace with your actual values)
-export AWS_ACCESS_KEY_ID=your-access-key-here
-export AWS_SECRET_ACCESS_KEY=your-secret-key-here
-export AWS_DEFAULT_REGION=us-east-1
+export MY_AWS_ACCESS_KEY_ID=your-access-key-here
+export MY_AWS_SECRET_ACCESS_KEY=your-secret-key-here
+export MY_AWS_DEFAULT_REGION=us-east-1
 
 # 4. Run the deployment script
 ./deploy.sh
@@ -193,8 +193,8 @@ For moderate usage (100-500 users):
 
 1. **"AWS credentials not found"**
    ```bash
-   export AWS_ACCESS_KEY_ID=your-key
-   export AWS_SECRET_ACCESS_KEY=your-secret
+   export MY_AWS_ACCESS_KEY_ID=your-key
+   export MY_AWS_SECRET_ACCESS_KEY=your-secret
    ```
 
 2. **"Bedrock access denied"**

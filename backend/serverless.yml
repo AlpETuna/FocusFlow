@@ -9,7 +9,7 @@ provider:
   stage: ${opt:stage, 'dev'}
   environment:
     JWT_SECRET: ${env:JWT_SECRET}
-    AWS_REGION: ${self:provider.region}
+    MY_AWS_REGION: ${self:provider.region}
     STAGE: ${self:provider.stage}
     USERS_TABLE: ${self:service}-${self:provider.stage}-users
     FOCUS_SESSIONS_TABLE: ${self:service}-${self:provider.stage}-focus-sessions

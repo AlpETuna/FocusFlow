@@ -12,8 +12,8 @@
     ESLINT_NO_DEV_ERRORS = "true"
     GENERATE_SOURCEMAP = "false"
     # REACT_APP_API_URL - Set this in Netlify UI environment variables
-    # AWS_ACCESS_KEY_ID - Set this in Netlify UI environment variables
-    # AWS_SECRET_ACCESS_KEY - Set this in Netlify UI environment variables
+    # MY_AWS_ACCESS_KEY_ID - Set this in Netlify UI environment variables
+    # MY_AWS_SECRET_ACCESS_KEY - Set this in Netlify UI environment variables
     # JWT_SECRET - Set this in Netlify UI environment variables
 
 # Redirect rules for Single Page Application

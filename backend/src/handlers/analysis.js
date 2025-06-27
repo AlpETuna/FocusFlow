@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
-const bedrock = new AWS.BedrockRuntime({ region: process.env.AWS_REGION });
+const bedrock = new AWS.BedrockRuntime({ region: process.env.MY_AWS_REGION });
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const USERS_TABLE = process.env.USERS_TABLE;

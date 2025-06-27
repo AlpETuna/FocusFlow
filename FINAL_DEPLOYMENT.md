@@ -31,9 +31,9 @@ export PATH=$PATH:$(pwd)/aws/dist
 
 **Option A: Environment Variables (Recommended)**
 ```bash
-export AWS_ACCESS_KEY_ID=your-access-key-id
-export AWS_SECRET_ACCESS_KEY=your-secret-access-key
-export AWS_DEFAULT_REGION=us-east-1
+export MY_AWS_ACCESS_KEY_ID=your-access-key-id
+export MY_AWS_SECRET_ACCESS_KEY=your-secret-access-key
+export MY_AWS_DEFAULT_REGION=us-east-1
 ```
 
 **Option B: AWS Configure**
@@ -89,8 +89,8 @@ RootFocus/
 JWT_SECRET="fjwjewrewieyreoe9394kj30skcxm45i4wods8fj3m590ske89djJ2h39skl5b50s386fu834j340dkds-23ij4-dw045k34302lsw-3o50667i43-0dfl;pe]w"
 
 # AWS Configuration
-AWS_REGION=us-east-1
-AWS_PROFILE=default
+MY_AWS_REGION=us-east-1
+MY_AWS_PROFILE=default
 ```
 
 ### Frontend Environment (`.env`)
