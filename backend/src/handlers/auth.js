@@ -1,42 +1,15 @@
 const AWS = require('aws-sdk');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
-
-const JWT_SECRET = process.env.JWT_SECRET;
 const USERS_TABLE = process.env.USERS_TABLE;
 
-// Helper function to generate JWT token
-const generateToken = (userId) => {
-  return jwt.sign({ userId }, JWT_SECRET, { expiresIn: '7d' });
-};
-
-// Helper function to verify JWT token
-const verifyToken = (token) => {
-  try {
-    return jwt.verify(token, JWT_SECRET);
-  } catch (error) {
-    return null;
-  }
-};
-
-// Helper function to get user from token
-const getUserFromToken = async (event) => {
-  const token = event.headers.Authorization?.replace('Bearer ', '');
-  if (!token) {
-    throw new Error('No token provided');
-  }
-
-  const decoded = verifyToken(token);
-  if (!decoded) {
-    throw new Error('Invalid token');
-  }
-
+// Helper function to get user by userId
+const getUserById = async (userId) => {
   const result = await dynamodb.get({
     TableName: USERS_TABLE,
-    Key: { userId: decoded.userId }
+    Key: { userId: userId }
   }).promise();
 
   if (!result.Item) {
@@ -44,6 +17,24 @@ const getUserFromToken = async (event) => {
   }
 
   return result.Item;
+};
+
+// Helper function to get user by email
+const getUserByEmail = async (email) => {
+  const result = await dynamodb.query({
+    TableName: USERS_TABLE,
+    IndexName: 'EmailIndex',
+    KeyConditionExpression: 'email = :email',
+    ExpressionAttributeValues: {
+      ':email': email
+    }
+  }).promise();
+
+  if (result.Items.length === 0) {
+    throw new Error('User not found');
+  }
+
+  return result.Items[0];
 };
 
 // Register new user
@@ -106,9 +97,6 @@ exports.register = async (event) => {
       Item: user
     }).promise();
 
-    // Generate token
-    const token = generateToken(userId);
-
     // Return user data without password
     const { password: _, ...userWithoutPassword } = user;
 
@@ -120,7 +108,6 @@ exports.register = async (event) => {
       },
       body: JSON.stringify({
         message: 'User registered successfully',
-        token,
         user: userWithoutPassword
       })
     };
@@ -200,9 +187,6 @@ exports.login = async (event) => {
       }
     }).promise();
 
-    // Generate token
-    const token = generateToken(user.userId);
-
     // Return user data without password
     const { password: _, ...userWithoutPassword } = user;
 
@@ -214,7 +198,6 @@ exports.login = async (event) => {
       },
       body: JSON.stringify({
         message: 'Login successful',
-        token,
         user: userWithoutPassword
       })
     };
@@ -231,10 +214,23 @@ exports.login = async (event) => {
   }
 };
 
-// Get user profile
+// Get user profile (using userId in headers)
 exports.getProfile = async (event) => {
   try {
-    const user = await getUserFromToken(event);
+    const userId = event.headers['x-user-id'] || event.headers['X-User-Id'];
+    
+    if (!userId) {
+      return {
+        statusCode: 400,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': '*',
+        },
+        body: JSON.stringify({ error: 'User ID is required in headers (x-user-id)' })
+      };
+    }
+
+    const user = await getUserById(userId);
 
     // Return user data without password
     const { password: _, ...userWithoutPassword } = user;
@@ -250,20 +246,34 @@ exports.getProfile = async (event) => {
   } catch (error) {
     console.error('Get profile error:', error);
     return {
-      statusCode: 401,
+      statusCode: 404,
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': '*',
       },
-      body: JSON.stringify({ error: error.message || 'Unauthorized' })
+      body: JSON.stringify({ error: error.message || 'User not found' })
     };
   }
 };
 
-// Update user profile
+// Update user profile (using userId in headers)
 exports.updateProfile = async (event) => {
   try {
-    const user = await getUserFromToken(event);
+    const userId = event.headers['x-user-id'] || event.headers['X-User-Id'];
+    
+    if (!userId) {
+      return {
+        statusCode: 400,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': '*',
+        },
+        body: JSON.stringify({ error: 'User ID is required in headers (x-user-id)' })
+      };
+    }
+
+    // Verify user exists
+    const user = await getUserById(userId);
     const updates = JSON.parse(event.body);
 
     // Only allow certain fields to be updated
@@ -338,7 +348,7 @@ exports.updateProfile = async (event) => {
   } catch (error) {
     console.error('Update profile error:', error);
     return {
-      statusCode: error.message === 'Unauthorized' ? 401 : 500,
+      statusCode: error.message === 'User not found' ? 404 : 500,
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': '*',
