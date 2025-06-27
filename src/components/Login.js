@@ -44,27 +44,39 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4" style={{
+    <div style={{
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '16px',
       background: 'linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 50%, #f0fff0 100%)'
     }}>
-      <div className="card w-full max-w-md">
-        <div className="text-center mb-6">
-          <div className="flex items-center justify-center mb-4">
-            <TreePine size={48} className="text-primary" />
+      <div className="card" style={{ width: '100%', maxWidth: '448px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
+            <TreePine size={48} style={{ color: 'var(--primary)' }} />
           </div>
-          <h1 className="text-2xl font-bold text-primary mb-2">
+          <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '8px' }}>
             {isLogin ? 'Welcome Back' : 'Join FocusFlow'}
           </h1>
-          <p className="text-secondary">
-            {isLogin 
-              ? 'Continue growing your focus tree' 
+          <p style={{ color: 'var(--text-secondary)' }}>
+            {isLogin
+              ? 'Continue growing your focus tree'
               : 'Start your journey to better focus'
             }
           </p>
         </div>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+          <div style={{
+            marginBottom: '16px',
+            padding: '12px',
+            backgroundColor: '#fef2f2',
+            border: '1px solid #fca5a5',
+            color: '#b91c1c',
+            borderRadius: '8px'
+          }}>
             {error}
           </div>
         )}
@@ -123,7 +135,8 @@ function Login() {
 
           <button
             type="submit"
-            className="btn btn-primary w-full mb-4"
+            className="btn btn-primary"
+            style={{ width: '100%', marginBottom: '16px' }}
             disabled={loading}
           >
             {loading ? (
@@ -142,7 +155,7 @@ function Login() {
           </button>
         </form>
 
-        <div className="text-center">
+        <div style={{ textAlign: 'center' }}>
           <button
             type="button"
             onClick={() => {
@@ -152,14 +165,14 @@ function Login() {
             }}
             className="btn btn-outline"
           >
-            {isLogin 
-              ? "Don't have an account? Sign up" 
+            {isLogin
+              ? "Don't have an account? Sign up"
               : "Already have an account? Sign in"
             }
           </button>
         </div>
 
-        <div className="mt-6 text-center text-sm text-gray-600">
+        <div style={{ marginTop: '24px', textAlign: 'center', fontSize: '14px', color: '#6b7280' }}>
           <p>🌱 Grow your focus, one session at a time</p>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Play, TrendingUp, Clock, Target, Users, Trophy, TreePine, ArrowRight } from 'lucide-react';
+import { Play, Clock, Target, Users, Trophy, TreePine, ArrowRight } from 'lucide-react';
 import TreeVisualization from './TreeVisualization';
 
 function Dashboard() {
@@ -58,17 +58,17 @@ function Dashboard() {
   return (
     <div className="page-container">
       {/* Welcome Section */}
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold mb-2">
+      <div style={{ marginBottom: '24px' }}>
+        <h1 style={{ fontSize: '1.875rem', fontWeight: 'bold', marginBottom: '8px' }}>
           Welcome back, {user?.name}! 👋
         </h1>
-        <p className="text-secondary">
+        <p style={{ color: 'var(--text-secondary)' }}>
           Ready to grow your focus tree today?
         </p>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-4 mb-6">
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '16px', marginBottom: '24px' }}>
         {stats.map((stat, index) => (
           <div key={index} className="stat-card">
             <div 
@@ -84,14 +84,14 @@ function Dashboard() {
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-3 gap-6">
+      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px' }}>
         {/* Tree Visualization */}
-        <div className="col-span-2">
+        <div>
           <div className="card">
-            <div className="flex justify-between items-center mb-4">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
               <div>
-                <h2 className="text-xl font-bold mb-1">Your Focus Tree</h2>
-                <p className="text-secondary text-sm">
+                <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '4px' }}>Your Focus Tree</h2>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
                   Level {user?.treeLevel || 1} • Keep growing!
                 </p>
               </div>
@@ -106,8 +106,8 @@ function Dashboard() {
             </div>
 
             {/* Progress Bar */}
-            <div className="mt-4">
-              <div className="flex justify-between text-sm text-secondary mb-2">
+            <div style={{ marginTop: '16px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '8px' }}>
                 <span>Progress to Level {(user?.treeLevel || 1) + 1}</span>
                 <span>{Math.round(((user?.totalFocusTime || 0) % 60) / 60 * 100)}%</span>
               </div>
@@ -122,26 +122,46 @@ function Dashboard() {
         </div>
 
         {/* Quick Actions & Activity */}
-        <div className="space-y-4">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {/* Quick Actions */}
           <div className="card">
-            <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
-            <div className="space-y-3">
+            <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '16px' }}>Quick Actions</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {quickActions.map((action, index) => (
                 <Link
                   key={index}
                   to={action.link}
-                  className="block p-4 rounded-lg border border-gray-200 hover:border-primary transition-all hover:shadow-md"
+                  style={{
+                    display: 'block',
+                    padding: '16px',
+                    borderRadius: '8px',
+                    border: '1px solid #e5e7eb',
+                    textDecoration: 'none',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.borderColor = 'var(--primary)';
+                    e.target.style.boxShadow = 'var(--shadow)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.borderColor = '#e5e7eb';
+                    e.target.style.boxShadow = 'none';
+                  }}
                 >
-                  <div className="flex items-start gap-3">
-                    <div className={`p-2 rounded-lg bg-${action.color} bg-opacity-10 text-${action.color}`}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                    <div style={{
+                      padding: '8px',
+                      borderRadius: '8px',
+                      backgroundColor: action.color === 'primary' ? 'rgba(45, 80, 22, 0.1)' : 'rgba(135, 206, 235, 0.1)',
+                      color: action.color === 'primary' ? 'var(--primary)' : 'var(--secondary)'
+                    }}>
                       {action.icon}
                     </div>
-                    <div className="flex-1">
-                      <h4 className="font-semibold mb-1">{action.title}</h4>
-                      <p className="text-sm text-secondary">{action.description}</p>
+                    <div style={{ flex: 1 }}>
+                      <h4 style={{ fontWeight: '600', marginBottom: '4px' }}>{action.title}</h4>
+                      <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>{action.description}</p>
                     </div>
-                    <ArrowRight size={20} className="text-gray-400 mt-1" />
+                    <ArrowRight size={20} style={{ color: '#9ca3af', marginTop: '4px' }} />
                   </div>
                 </Link>
               ))}
@@ -150,50 +170,50 @@ function Dashboard() {
 
           {/* Recent Activity */}
           <div className="card">
-            <h3 className="text-lg font-semibold mb-4">Recent Activity</h3>
-            <div className="space-y-3">
-              <div className="flex items-center gap-3 text-sm">
-                <div className="w-2 h-2 bg-success rounded-full"></div>
-                <span className="text-secondary">Completed 45min focus session</span>
-                <span className="text-xs text-gray-400 ml-auto">2h ago</span>
+            <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '16px' }}>Recent Activity</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '14px' }}>
+                <div style={{ width: '8px', height: '8px', backgroundColor: 'var(--success)', borderRadius: '50%' }}></div>
+                <span style={{ color: 'var(--text-secondary)' }}>Completed 45min focus session</span>
+                <span style={{ fontSize: '12px', color: '#9ca3af', marginLeft: 'auto' }}>2h ago</span>
               </div>
-              <div className="flex items-center gap-3 text-sm">
-                <div className="w-2 h-2 bg-primary rounded-full"></div>
-                <span className="text-secondary">Joined "Study Squad" group</span>
-                <span className="text-xs text-gray-400 ml-auto">5h ago</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '14px' }}>
+                <div style={{ width: '8px', height: '8px', backgroundColor: 'var(--primary)', borderRadius: '50%' }}></div>
+                <span style={{ color: 'var(--text-secondary)' }}>Joined "Study Squad" group</span>
+                <span style={{ fontSize: '12px', color: '#9ca3af', marginLeft: 'auto' }}>5h ago</span>
               </div>
-              <div className="flex items-center gap-3 text-sm">
-                <div className="w-2 h-2 bg-warning rounded-full"></div>
-                <span className="text-secondary">Reached Level 5!</span>
-                <span className="text-xs text-gray-400 ml-auto">1d ago</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '14px' }}>
+                <div style={{ width: '8px', height: '8px', backgroundColor: 'var(--warning)', borderRadius: '50%' }}></div>
+                <span style={{ color: 'var(--text-secondary)' }}>Reached Level 5!</span>
+                <span style={{ fontSize: '12px', color: '#9ca3af', marginLeft: 'auto' }}>1d ago</span>
               </div>
             </div>
           </div>
 
           {/* Friends Online */}
           <div className="card">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold">Friends Online</h3>
-              <Link to="/friends" className="text-sm text-primary hover:underline">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <h3 style={{ fontSize: '1.125rem', fontWeight: '600' }}>Friends Online</h3>
+              <Link to="/friends" style={{ fontSize: '14px', color: 'var(--primary)', textDecoration: 'none' }}>
                 View all
               </Link>
             </div>
-            <div className="space-y-2">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <div className="friend-item">
-                <div className="friend-avatar text-sm">A</div>
+                <div className="friend-avatar" style={{ fontSize: '14px' }}>A</div>
                 <div className="friend-info">
                   <div className="friend-name">Alex Chen</div>
                   <div className="friend-status">Studying now</div>
                 </div>
-                <div className="w-2 h-2 bg-success rounded-full"></div>
+                <div style={{ width: '8px', height: '8px', backgroundColor: 'var(--success)', borderRadius: '50%' }}></div>
               </div>
               <div className="friend-item">
-                <div className="friend-avatar text-sm">S</div>
+                <div className="friend-avatar" style={{ fontSize: '14px' }}>S</div>
                 <div className="friend-info">
                   <div className="friend-name">Sarah Johnson</div>
                   <div className="friend-status">Online</div>
                 </div>
-                <div className="w-2 h-2 bg-primary rounded-full"></div>
+                <div style={{ width: '8px', height: '8px', backgroundColor: 'var(--primary)', borderRadius: '50%' }}></div>
               </div>
             </div>
           </div>

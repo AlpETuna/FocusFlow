@@ -146,7 +146,7 @@ function TreeVisualization({ level = 1, animated = true }) {
   const size = getTreeSize();
 
   return (
-    <div className="tree-container relative">
+    <div className="tree-container" style={{ position: 'relative' }}>
       <svg
         width={size}
         height={size + 20}
@@ -174,7 +174,7 @@ function TreeVisualization({ level = 1, animated = true }) {
           x={size / 2}
           y={20}
           textAnchor="middle"
-          className="text-sm font-bold"
+          style={{ fontSize: '14px', fontWeight: 'bold' }}
           fill="var(--primary)"
         >
           Level {level}

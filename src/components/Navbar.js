@@ -35,23 +35,31 @@ function Navbar() {
                 className={`nav-link ${isActive(item.path) ? 'active' : ''}`}
               >
                 <Icon size={18} />
-                <span className="hidden md:inline">{item.label}</span>
+                <span style={{ display: 'none' }}>{item.label}</span>
               </Link>
             );
           })}
 
-          <div className="ml-4 pl-4 border-l border-gray-200 flex items-center gap-2">
+          <div style={{
+            marginLeft: '16px',
+            paddingLeft: '16px',
+            borderLeft: '1px solid #e5e7eb',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px'
+          }}>
             <Link
               to="/profile"
               className={`nav-link ${isActive('/profile') ? 'active' : ''}`}
             >
               <UserCircle size={18} />
-              <span className="hidden md:inline">{user?.name || 'Profile'}</span>
+              <span style={{ display: 'none' }}>{user?.name || 'Profile'}</span>
             </Link>
             
             <button
               onClick={logout}
-              className="nav-link text-danger hover:bg-red-50"
+              className="nav-link"
+              style={{ color: 'var(--danger)' }}
             >
               <LogOut size={18} />
             </button>

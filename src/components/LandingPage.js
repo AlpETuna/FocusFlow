@@ -165,7 +165,7 @@ function LandingPage() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-4" style={{ gap: '32px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '32px' }}>
             {features.map((feature, index) => (
               <motion.div
                 key={index}
@@ -199,23 +199,23 @@ function LandingPage() {
       </div>
 
       {/* How It Works */}
-      <div className="py-20 bg-gray-50">
-        <div className="container mx-auto px-6">
+      <div style={{ paddingTop: '80px', paddingBottom: '80px', background: '#f9fafb' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-16"
+            style={{ textAlign: 'center', marginBottom: '64px' }}
           >
-            <h2 className="text-4xl font-bold mb-4">How It Works</h2>
-            <p className="text-xl text-secondary max-w-2xl mx-auto">
+            <h2 style={{ fontSize: '2.25rem', fontWeight: 'bold', marginBottom: '16px', color: '#2d5016' }}>How It Works</h2>
+            <p style={{ fontSize: '1.25rem', color: '#4a7c59', maxWidth: '600px', margin: '0 auto' }}>
               Get started in minutes and see immediate results
             </p>
           </motion.div>
 
-          <div className="max-w-4xl mx-auto">
-            <div className="grid md:grid-cols-3 gap-8">
+          <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '32px' }}>
               {[
                 { step: 1, title: "Create Account", desc: "Sign up free in seconds" },
                 { step: 2, title: "Start Studying", desc: "Enable AI monitoring for authentic tracking" },
@@ -227,13 +227,25 @@ function LandingPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="text-center"
+                  style={{ textAlign: 'center' }}
                 >
-                  <div className="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+                  <div style={{
+                    width: '64px',
+                    height: '64px',
+                    background: 'var(--primary)',
+                    color: 'white',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '1.5rem',
+                    fontWeight: 'bold',
+                    margin: '0 auto 16px auto'
+                  }}>
                     {item.step}
                   </div>
-                  <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
-                  <p className="text-secondary">{item.desc}</p>
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '8px', color: '#2d5016' }}>{item.title}</h3>
+                  <p style={{ color: '#4a7c59' }}>{item.desc}</p>
                 </motion.div>
               ))}
             </div>
@@ -242,21 +254,31 @@ function LandingPage() {
       </div>
 
       {/* CTA Section */}
-      <div className="py-20 bg-gradient-to-r from-primary to-secondary">
-        <div className="container mx-auto px-6 text-center">
+      <div style={{
+        paddingTop: '80px',
+        paddingBottom: '80px',
+        background: 'linear-gradient(135deg, var(--primary), var(--secondary))'
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px', textAlign: 'center' }}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-4xl font-bold text-white mb-4">
+            <h2 style={{ fontSize: '2.25rem', fontWeight: 'bold', color: 'white', marginBottom: '16px' }}>
               Ready to Transform Your Study Habits?
             </h2>
-            <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+            <p style={{ fontSize: '1.25rem', color: 'rgba(255, 255, 255, 0.9)', marginBottom: '32px', maxWidth: '600px', margin: '0 auto 32px auto' }}>
               Join thousands of students already growing their focus trees
             </p>
-            <Link to="/login" className="btn bg-white text-primary hover:bg-gray-100 text-lg px-8 py-4">
+            <Link to="/login" className="btn" style={{
+              background: 'white',
+              color: 'var(--primary)',
+              fontSize: '1.125rem',
+              padding: '16px 32px',
+              textDecoration: 'none'
+            }}>
               Start Growing Your Tree
               <ArrowRight size={20} />
             </Link>

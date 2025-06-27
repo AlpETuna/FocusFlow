@@ -100,32 +100,34 @@ function Friends() {
   };
 
   return (
-    <div className="min-h-screen" style={{
+    <div style={{
+      minHeight: '100vh',
       background: 'linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 50%, #f0fff0 100%)'
     }}>
-      
-      <div className="container mx-auto px-4 py-8">
+
+      <div className="container" style={{ padding: '32px 16px' }}>
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold mb-2" style={{color: 'var(--primary)'}}>
-            <Users className="inline-block mr-3" size={40} />
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <h1 style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '8px', color: 'var(--primary)' }}>
+            <Users style={{ display: 'inline-block', marginRight: '12px', verticalAlign: 'middle' }} size={40} />
             Friends
           </h1>
-          <p className="text-lg" style={{color: 'var(--text-secondary)'}}>
+          <p style={{ fontSize: '1.125rem', color: 'var(--text-secondary)' }}>
             Connect with study buddies and grow together
           </p>
         </div>
 
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '32px' }}>
             {/* Friends List */}
-            <div className="lg:col-span-2">
-              <div className="card mb-6">
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-xl font-bold text-primary">Your Friends ({friends.length})</h2>
+            <div>
+              <div className="card" style={{ marginBottom: '24px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                  <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--primary)' }}>Your Friends ({friends.length})</h2>
                   <button
                     onClick={() => setShowAddFriend(true)}
-                    className="btn btn-primary text-sm px-4 py-2"
+                    className="btn btn-primary"
+                    style={{ fontSize: '14px', padding: '8px 16px' }}
                   >
                     <UserPlus size={16} />
                     Add Friend
@@ -133,29 +135,36 @@ function Friends() {
                 </div>
 
                 {/* Search Bar */}
-                <div className="relative mb-4">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-secondary" size={20} />
+                <div style={{ position: 'relative', marginBottom: '16px' }}>
+                  <Search style={{
+                    position: 'absolute',
+                    left: '12px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: 'var(--text-secondary)'
+                  }} size={20} />
                   <input
                     type="text"
                     placeholder="Search friends..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="form-input pl-10 text-sm"
+                    className="form-input"
+                    style={{ paddingLeft: '40px', fontSize: '14px' }}
                   />
                 </div>
 
                 {/* Friends Grid */}
-                <div className="grid grid-cols-2 gap-4">
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                   {filteredFriends.map(friend => (
-                    <div key={friend.id} className="card p-4">
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex items-center space-x-3">
+                    <div key={friend.id} className="card" style={{ padding: '16px' }}>
+                      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '12px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                           <div className="friend-avatar">
                             {friend.name.charAt(0)}
                           </div>
                           <div>
-                            <h3 className="font-semibold text-primary">{friend.name}</h3>
-                            <p className="text-sm text-secondary">{friend.email}</p>
+                            <h3 style={{ fontWeight: '600', color: 'var(--primary)' }}>{friend.name}</h3>
+                            <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>{friend.email}</p>
                           </div>
                         </div>
                         <span className={`friend-status ${getStatusColor(friend.status)}`}>
@@ -163,7 +172,7 @@ function Friends() {
                         </span>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-3 mb-3">
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '12px' }}>
                         <div className="stat-card">
                           <div className="stat-value">L{friend.treeLevel}</div>
                           <div className="stat-label">Tree Level</div>
@@ -175,14 +184,14 @@ function Friends() {
                       </div>
 
                       {friend.status === 'studying' && friend.currentSession && (
-                        <div className="text-sm text-primary mb-2">
+                        <div style={{ fontSize: '14px', color: 'var(--primary)', marginBottom: '8px' }}>
                           📚 Studying: {friend.currentSession}
                         </div>
                       )}
 
-                      <div className="flex justify-between items-center text-sm text-leaf-green">
-                        <span className="text-secondary">Last seen: {friend.lastSeen}</span>
-                        <button className="btn btn-outline text-xs px-2 py-1">
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '14px' }}>
+                        <span style={{ color: 'var(--text-secondary)' }}>Last seen: {friend.lastSeen}</span>
+                        <button className="btn btn-outline" style={{ fontSize: '12px', padding: '4px 8px' }}>
                           <MessageCircle size={12} />
                           Chat
                         </button>
@@ -194,31 +203,32 @@ function Friends() {
             </div>
 
             {/* Sidebar */}
-            <div className="space-y-6">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
               {/* Friend Requests */}
               {friendRequests.length > 0 && (
                 <div className="card">
-                  <h3 className="font-bold text-primary mb-4">Friend Requests</h3>
+                  <h3 style={{ fontWeight: 'bold', color: 'var(--primary)', marginBottom: '16px' }}>Friend Requests</h3>
                   {friendRequests.map(request => (
-                    <div key={request.id} className="card p-3 mb-3">
-                      <div className="flex items-center space-x-3 mb-3">
-                        <div className="friend-avatar text-sm">
+                    <div key={request.id} className="card" style={{ padding: '12px', marginBottom: '12px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                        <div className="friend-avatar" style={{ fontSize: '14px' }}>
                           {request.name.charAt(0)}
                         </div>
                         <div>
-                          <h4 className="font-semibold text-primary text-sm">{request.name}</h4>
-                          <p className="text-xs text-secondary">Tree Level {request.treeLevel}</p>
-                          <p className="text-xs text-secondary">{request.mutualFriends} mutual friends</p>
+                          <h4 style={{ fontWeight: '600', color: 'var(--primary)', fontSize: '14px' }}>{request.name}</h4>
+                          <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Tree Level {request.treeLevel}</p>
+                          <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{request.mutualFriends} mutual friends</p>
                         </div>
                       </div>
-                      <div className="flex space-x-2">
+                      <div style={{ display: 'flex', gap: '8px' }}>
                         <button
                           onClick={() => handleAcceptRequest(request.id)}
-                          className="btn btn-primary text-xs px-3 py-1 flex-1"
+                          className="btn btn-primary"
+                          style={{ fontSize: '12px', padding: '6px 12px', flex: 1 }}
                         >
                           Accept
                         </button>
-                        <button className="btn btn-outline text-xs px-3 py-1 flex-1">
+                        <button className="btn btn-outline" style={{ fontSize: '12px', padding: '6px 12px', flex: 1 }}>
                           Decline
                         </button>
                       </div>
@@ -229,8 +239,8 @@ function Friends() {
 
               {/* Quick Stats */}
               <div className="card">
-                <h3 className="font-bold text-primary mb-4">Your Stats</h3>
-                <div className="space-y-3">
+                <h3 style={{ fontWeight: 'bold', color: 'var(--primary)', marginBottom: '16px' }}>Your Stats</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   <div className="stat-card">
                     <div className="stat-value">L{user?.treeLevel || 1}</div>
                     <div className="stat-label">Tree Level</div>
@@ -248,13 +258,13 @@ function Friends() {
 
               {/* Study Groups */}
               <div className="card">
-                <h3 className="font-bold text-primary mb-4">Study Groups</h3>
-                <div className="space-y-2">
-                  <div className="text-sm text-secondary text-center py-4">
-                    <Users size={24} className="mx-auto mb-2 opacity-50" />
+                <h3 style={{ fontWeight: 'bold', color: 'var(--primary)', marginBottom: '16px' }}>Study Groups</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <div style={{ fontSize: '14px', color: 'var(--text-secondary)', textAlign: 'center', padding: '16px 0' }}>
+                    <Users size={24} style={{ margin: '0 auto 8px auto', opacity: 0.5 }} />
                     No study groups yet
                   </div>
-                  <button className="btn btn-outline text-sm w-full">
+                  <button className="btn btn-outline" style={{ fontSize: '14px', width: '100%' }}>
                     <UserPlus size={16} />
                     Create Group
                   </button>
@@ -266,10 +276,28 @@ function Friends() {
 
         {/* Add Friend Modal */}
         {showAddFriend && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-              <h3 className="text-xl font-bold text-primary mb-4">Add Friend</h3>
-              <div className="space-y-4">
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 50
+          }}>
+            <div style={{
+              backgroundColor: 'white',
+              borderRadius: '8px',
+              padding: '24px',
+              maxWidth: '448px',
+              width: '100%',
+              margin: '0 16px'
+            }}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '16px' }}>Add Friend</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div>
                   <label className="form-label">Friend's Email</label>
                   <input
@@ -278,16 +306,18 @@ function Friends() {
                     className="form-input"
                   />
                 </div>
-                <div className="flex space-x-3">
+                <div style={{ display: 'flex', gap: '12px' }}>
                   <button
                     onClick={() => handleAddFriend('example@email.com')}
-                    className="btn btn-primary flex-1"
+                    className="btn btn-primary"
+                    style={{ flex: 1 }}
                   >
                     Send Request
                   </button>
                   <button
                     onClick={() => setShowAddFriend(false)}
-                    className="btn btn-outline flex-1"
+                    className="btn btn-outline"
+                    style={{ flex: 1 }}
                   >
                     Cancel
                   </button>

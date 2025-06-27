@@ -186,35 +186,43 @@ function FocusSession() {
 
   return (
     <div className="page-container">
-      <div className="max-w-6xl mx-auto">
+      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-2">
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <h1 style={{ fontSize: '1.875rem', fontWeight: 'bold', marginBottom: '8px' }}>
             {sessionType === 'focus' ? '🎯 Focus Time' : '☕ Break Time'}
           </h1>
-          <p className="text-secondary">
-            {sessionType === 'focus' 
-              ? 'Stay focused and grow your tree' 
+          <p style={{ color: 'var(--text-secondary)' }}>
+            {sessionType === 'focus'
+              ? 'Stay focused and grow your tree'
               : 'Take a well-deserved break'
             }
           </p>
           {sessionError && (
-            <div className="mt-4 bg-danger bg-opacity-10 border border-danger rounded-lg p-3 inline-block">
-              <p className="text-danger text-sm">{sessionError}</p>
+            <div style={{
+              marginTop: '16px',
+              backgroundColor: 'rgba(220, 20, 60, 0.1)',
+              border: '1px solid var(--danger)',
+              borderRadius: '8px',
+              padding: '12px',
+              display: 'inline-block'
+            }}>
+              <p style={{ color: 'var(--danger)', fontSize: '14px' }}>{sessionError}</p>
             </div>
           )}
         </div>
 
-        <div className="grid grid-cols-3 gap-6">
+        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px' }}>
           {/* Timer Section */}
-          <div className="col-span-2">
+          <div>
             <div className="card">
               {/* Settings Toggle */}
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-semibold">Timer</h2>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+                <h2 style={{ fontSize: '1.25rem', fontWeight: '600' }}>Timer</h2>
                 <button
                   onClick={() => setShowSettings(!showSettings)}
-                  className="btn btn-outline btn-sm"
+                  className="btn btn-outline"
+                  style={{ fontSize: '14px', padding: '6px 12px' }}
                   disabled={isActive}
                 >
                   <Settings size={16} />
@@ -224,25 +232,43 @@ function FocusSession() {
 
               {/* Settings Panel */}
               {showSettings && (
-                <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-                  <h3 className="font-semibold mb-3">Session Settings</h3>
+                <div style={{
+                  marginBottom: '24px',
+                  padding: '16px',
+                  backgroundColor: '#f9fafb',
+                  borderRadius: '8px'
+                }}>
+                  <h3 style={{ fontWeight: '600', marginBottom: '12px' }}>Session Settings</h3>
                   
                   {/* AI Monitoring Toggle */}
-                  <div className="mb-4">
-                    <label className="flex items-center justify-between">
-                      <span className="font-medium">AI Study Monitoring</span>
+                  <div style={{ marginBottom: '16px' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <span style={{ fontWeight: '500' }}>AI Study Monitoring</span>
                       <button
                         onClick={() => setAiMonitoring(!aiMonitoring)}
-                        className={`relative w-12 h-6 rounded-full transition-colors ${
-                          aiMonitoring ? 'bg-primary' : 'bg-gray-300'
-                        }`}
+                        style={{
+                          position: 'relative',
+                          width: '48px',
+                          height: '24px',
+                          borderRadius: '9999px',
+                          border: 'none',
+                          backgroundColor: aiMonitoring ? 'var(--primary)' : '#d1d5db',
+                          transition: 'background-color 0.2s'
+                        }}
                       >
-                        <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full transition-transform ${
-                          aiMonitoring ? 'translate-x-6' : 'translate-x-0.5'
-                        }`} />
+                        <div style={{
+                          position: 'absolute',
+                          top: '2px',
+                          left: aiMonitoring ? '26px' : '2px',
+                          width: '20px',
+                          height: '20px',
+                          backgroundColor: 'white',
+                          borderRadius: '50%',
+                          transition: 'left 0.2s'
+                        }} />
                       </button>
                     </label>
-                    <p className="text-sm text-secondary mt-1">
+                    <p style={{ fontSize: '14px', color: 'var(--text-secondary)', marginTop: '4px' }}>
                       {aiMonitoring
                         ? 'AI will verify your study activity'
                         : 'Manual mode - no AI verification'
@@ -250,20 +276,19 @@ function FocusSession() {
                     </p>
                   </div>
 
-                  <h4 className="font-semibold mb-3">Timer Presets</h4>
-                  <div className="grid grid-cols-3 gap-2">
+                  <h4 style={{ fontWeight: '600', marginBottom: '12px' }}>Timer Presets</h4>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px' }}>
                     {Object.keys(presets).map(preset => (
                       <button
                         key={preset}
                         onClick={() => handlePresetChange(preset)}
-                        className={`btn btn-sm ${
-                          selectedPreset === preset ? 'btn-primary' : 'btn-outline'
-                        }`}
+                        className={`btn ${selectedPreset === preset ? 'btn-primary' : 'btn-outline'}`}
+                        style={{ fontSize: '14px', padding: '8px 12px' }}
                         disabled={isActive}
                       >
                         <div>
-                          <div className="capitalize">{preset}</div>
-                          <div className="text-xs opacity-80">
+                          <div style={{ textTransform: 'capitalize' }}>{preset}</div>
+                          <div style={{ fontSize: '12px', opacity: 0.8 }}>
                             {presets[preset].focus}m / {presets[preset].break}m
                           </div>
                         </div>
@@ -274,12 +299,12 @@ function FocusSession() {
               )}
 
               {/* Timer Display */}
-              <div className="text-center mb-8">
+              <div style={{ textAlign: 'center', marginBottom: '32px' }}>
                 <div className="timer-display">
                   {formatTime(timeLeft)}
                 </div>
                 <div className="timer-progress">
-                  <div 
+                  <div
                     className="timer-progress-bar"
                     style={{ width: `${getProgressPercentage()}%` }}
                   />
@@ -287,7 +312,7 @@ function FocusSession() {
               </div>
 
               {/* Timer Controls */}
-              <div className="flex justify-center gap-3">
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
                 {!isActive ? (
                   <button onClick={startTimer} className="btn btn-primary">
                     <Play size={20} />
@@ -312,7 +337,7 @@ function FocusSession() {
               </div>
 
               {/* Session Stats */}
-              <div className="mt-8 grid grid-cols-2 gap-4">
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '32px' }}>
                 <div className="stat-card">
                   <div className="stat-value">{completedSessions}</div>
                   <div className="stat-label">Sessions Today</div>
@@ -328,7 +353,7 @@ function FocusSession() {
 
             {/* Screen Analysis Component */}
             {sessionType === 'focus' && aiMonitoring && (
-              <div className="mt-6">
+              <div style={{ marginTop: '24px' }}>
                 <ScreenAnalysis
                   sessionId={currentSessionId}
                   onAnalysisResult={handleAnalysisResult}
@@ -340,25 +365,25 @@ function FocusSession() {
 
           {/* Tree Growth Section */}
           <div className="card">
-            <div className="text-center mb-4">
-              <h2 className="text-xl font-semibold mb-2">Your Growing Tree</h2>
-              <p className="text-sm text-secondary">
+            <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+              <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '8px' }}>Your Growing Tree</h2>
+              <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>
                 Level {user?.treeLevel || 1}
               </p>
             </div>
             
-            <div className="tree-container mb-6">
-              <TreeVisualization 
-                level={user?.treeLevel || 1} 
+            <div className="tree-container" style={{ marginBottom: '24px' }}>
+              <TreeVisualization
+                level={user?.treeLevel || 1}
                 animated={isActive && sessionType === 'focus'}
               />
             </div>
 
             {/* Motivation */}
-            <div className="text-center">
-              <p className="text-sm text-secondary mb-4">
-                {isActive && sessionType === 'focus' 
-                  ? "🌱 Your tree is growing stronger!" 
+            <div style={{ textAlign: 'center' }}>
+              <p style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '16px' }}>
+                {isActive && sessionType === 'focus'
+                  ? "🌱 Your tree is growing stronger!"
                   : sessionType === 'break'
                   ? "🌿 Rest well, your tree is absorbing nutrients!"
                   : "🌳 Ready to nurture your focus tree?"
@@ -367,19 +392,19 @@ function FocusSession() {
 
               {/* Next Level Progress */}
               <div>
-                <div className="flex justify-between text-sm text-secondary mb-2">
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '8px' }}>
                   <span>Level {user?.treeLevel || 1}</span>
                   <span>Level {(user?.treeLevel || 1) + 1}</span>
                 </div>
                 <div className="timer-progress">
-                  <div 
+                  <div
                     className="timer-progress-bar"
-                    style={{ 
-                      width: `${Math.min(((user?.totalFocusTime || 0) % 60) / 60 * 100, 100)}%` 
+                    style={{
+                      width: `${Math.min(((user?.totalFocusTime || 0) % 60) / 60 * 100, 100)}%`
                     }}
                   />
                 </div>
-                <p className="text-xs text-center text-secondary mt-2">
+                <p style={{ fontSize: '12px', textAlign: 'center', color: 'var(--text-secondary)', marginTop: '8px' }}>
                   {60 - ((user?.totalFocusTime || 0) % 60)} minutes to next level
                 </p>
               </div>

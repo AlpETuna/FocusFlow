@@ -147,34 +147,36 @@ function Leaderboard() {
   ];
 
   return (
-    <div className="min-h-screen" style={{
+    <div style={{
+      minHeight: '100vh',
       background: 'linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 50%, #f0fff0 100%)'
     }}>
-      <div className="container mx-auto px-4 py-8">
+      <div className="container" style={{ padding: '32px 16px' }}>
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold mb-2" style={{color: 'var(--primary)'}}>
-            <Trophy className="inline-block mr-3" size={40} />
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <h1 style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '8px', color: 'var(--primary)' }}>
+            <Trophy style={{ display: 'inline-block', marginRight: '12px', verticalAlign: 'middle' }} size={40} />
             Leaderboard
           </h1>
-          <p className="text-lg" style={{color: 'var(--text-secondary)'}}>
+          <p style={{ fontSize: '1.125rem', color: 'var(--text-secondary)' }}>
             Compete with friends and climb the rankings
           </p>
         </div>
 
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '3fr 1fr', gap: '32px' }}>
             {/* Main Leaderboard */}
-            <div className="lg:col-span-3">
-              <div className="card mb-6">
+            <div>
+              <div className="card" style={{ marginBottom: '24px' }}>
                 {/* Filters */}
-                <div className="flex flex-col sm:flex-row gap-4 mb-6">
-                  <div className="flex-1">
-                    <label className="form-label text-sm">Time Period</label>
+                <div style={{ display: 'flex', gap: '16px', marginBottom: '24px', flexWrap: 'wrap' }}>
+                  <div style={{ flex: 1 }}>
+                    <label className="form-label" style={{ fontSize: '14px' }}>Time Period</label>
                     <select
                       value={selectedPeriod}
                       onChange={(e) => setSelectedPeriod(e.target.value)}
-                      className="form-input text-sm"
+                      className="form-input"
+                      style={{ fontSize: '14px' }}
                     >
                       {periods.map(period => (
                         <option key={period.value} value={period.value}>
@@ -183,12 +185,13 @@ function Leaderboard() {
                       ))}
                     </select>
                   </div>
-                  <div className="flex-1">
-                    <label className="form-label text-sm">Metric</label>
+                  <div style={{ flex: 1 }}>
+                    <label className="form-label" style={{ fontSize: '14px' }}>Metric</label>
                     <select
                       value={selectedMetric}
                       onChange={(e) => setSelectedMetric(e.target.value)}
-                      className="form-input text-sm"
+                      className="form-input"
+                      style={{ fontSize: '14px' }}
                     >
                       {metrics.map(metric => (
                         <option key={metric.value} value={metric.value}>
@@ -200,64 +203,105 @@ function Leaderboard() {
                 </div>
 
                 {/* Podium */}
-                <div className="grid grid-cols-3 gap-4 mb-8">
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px', marginBottom: '32px' }}>
                   {leaderboardData.slice(0, 3).map((item, index) => (
                     <div
                       key={item.id}
-                      className={`text-center ${index === 0 ? 'order-2' : index === 1 ? 'order-1' : 'order-3'}`}
+                      style={{
+                        textAlign: 'center',
+                        order: index === 0 ? 2 : index === 1 ? 1 : 3
+                      }}
                     >
-                      <div className={`${index === 0 ? 'h-24' : index === 1 ? 'h-20' : 'h-16'} rounded-t-lg mb-4 flex items-end justify-center pb-2`} style={{
+                      <div style={{
+                        height: index === 0 ? '96px' : index === 1 ? '80px' : '64px',
+                        borderTopLeftRadius: '8px',
+                        borderTopRightRadius: '8px',
+                        marginBottom: '16px',
+                        display: 'flex',
+                        alignItems: 'flex-end',
+                        justifyContent: 'center',
+                        paddingBottom: '8px',
                         background: 'linear-gradient(to top, var(--accent), var(--accent-light))'
                       }}>
-                        <div className="text-white font-bold text-2xl">
+                        <div style={{ color: 'white', fontWeight: 'bold', fontSize: '1.5rem' }}>
                           {index + 1}
                         </div>
                       </div>
-                      <div className="friend-avatar mx-auto mb-2">
+                      <div className="friend-avatar" style={{ margin: '0 auto 8px auto' }}>
                         {item.avatar}
                       </div>
-                      <h3 className="font-bold text-primary text-sm">{item.name}</h3>
-                      <p className="text-xs text-secondary">{getMetricValue(item)}</p>
-                      {index === 0 && <Trophy className="mx-auto mt-1 text-yellow-500" size={20} />}
-                      {index === 1 && <Medal className="mx-auto mt-1 text-gray-400" size={20} />}
-                      {index === 2 && <Award className="mx-auto mt-1 text-orange-600" size={20} />}
+                      <h3 style={{ fontWeight: 'bold', color: 'var(--primary)', fontSize: '14px' }}>{item.name}</h3>
+                      <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{getMetricValue(item)}</p>
+                      {index === 0 && <Trophy style={{ margin: '4px auto 0 auto', color: '#eab308' }} size={20} />}
+                      {index === 1 && <Medal style={{ margin: '4px auto 0 auto', color: '#9ca3af' }} size={20} />}
+                      {index === 2 && <Award style={{ margin: '4px auto 0 auto', color: '#ea580c' }} size={20} />}
                     </div>
                   ))}
                 </div>
 
                 {/* Full Leaderboard */}
-                <div className="space-y-2">
-                  <h3 className="font-bold text-primary mb-4">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <h3 style={{ fontWeight: 'bold', color: 'var(--primary)', marginBottom: '16px' }}>
                     Full Rankings - {getMetricLabel()}
                   </h3>
                   {leaderboardData.map((item, index) => (
                     <div
                       key={item.id}
-                      className={`flex items-center p-4 rounded-lg transition-all ${item.isCurrentUser ? 'bg-success bg-opacity-10 border-2 border-success' : 'hover:bg-gray-50'}`}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        padding: '16px',
+                        borderRadius: '8px',
+                        transition: 'all 0.3s',
+                        backgroundColor: item.isCurrentUser ? 'rgba(34, 197, 94, 0.1)' : 'transparent',
+                        border: item.isCurrentUser ? '2px solid var(--success)' : 'none'
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!item.isCurrentUser) {
+                          e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.05)';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!item.isCurrentUser) {
+                          e.currentTarget.style.backgroundColor = 'transparent';
+                        }
+                      }}
                     >
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold mr-4 ${getRankClass(item.rank)}`} style={{
+                      <div style={{
+                        width: '40px',
+                        height: '40px',
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: 'white',
+                        fontWeight: 'bold',
+                        marginRight: '16px',
                         backgroundColor: item.rank <= 3 ? 'var(--primary)' : 'var(--text-secondary)'
                       }}>
                         {item.rank}
                       </div>
                       
-                      <div className="friend-avatar mr-4">
+                      <div className="friend-avatar" style={{ marginRight: '16px' }}>
                         {item.avatar}
                       </div>
                       
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between">
+                      <div style={{ flex: 1 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                           <div>
-                            <h4 className="font-semibold text-primary">
+                            <h4 style={{ fontWeight: '600', color: 'var(--primary)' }}>
                               {item.name} {item.isCurrentUser && '(You)'}
                             </h4>
-                            <p className="text-sm text-secondary">Tree Level {item.treeLevel}</p>
+                            <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Tree Level {item.treeLevel}</p>
                           </div>
-                          <div className="text-right">
-                            <div className="font-bold text-primary">
+                          <div style={{ textAlign: 'right' }}>
+                            <div style={{ fontWeight: 'bold', color: 'var(--primary)' }}>
                               {getMetricValue(item)}
                             </div>
-                            <div className={`text-xs ${item.change.startsWith('+') ? 'text-green-600' : item.change.startsWith('-') ? 'text-red-600' : 'text-gray-600'}`}>
+                            <div style={{
+                              fontSize: '12px',
+                              color: item.change.startsWith('+') ? '#16a34a' : item.change.startsWith('-') ? '#dc2626' : '#6b7280'
+                            }}>
                               {item.change !== '0' && (item.change.startsWith('+') ? '↗' : '↘')} {item.change}
                             </div>
                           </div>
@@ -270,49 +314,73 @@ function Leaderboard() {
             </div>
 
             {/* Sidebar */}
-            <div className="space-y-6">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
               {/* Your Rank */}
               <div className="card">
-                <h3 className="font-bold text-primary mb-4">Your Ranking</h3>
-                <div className="text-center">
-                  <div className="friend-avatar mx-auto mb-3">
+                <h3 style={{ fontWeight: 'bold', color: 'var(--primary)', marginBottom: '16px' }}>Your Ranking</h3>
+                <div style={{ textAlign: 'center' }}>
+                  <div className="friend-avatar" style={{ margin: '0 auto 12px auto' }}>
                     {(user?.name || 'Y').charAt(0)}
                   </div>
-                  <div className="text-2xl font-bold text-primary mb-1">#{leaderboardData.find(item => item.isCurrentUser)?.rank || 5}</div>
-                  <div className="text-sm text-secondary mb-3">out of {leaderboardData.length} friends</div>
-                  <div className="text-xs text-green-600">↗ +3 this week</div>
+                  <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '4px' }}>#{leaderboardData.find(item => item.isCurrentUser)?.rank || 5}</div>
+                  <div style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '12px' }}>out of {leaderboardData.length} friends</div>
+                  <div style={{ fontSize: '12px', color: '#16a34a' }}>↗ +3 this week</div>
                 </div>
               </div>
 
               {/* Achievement Badges */}
               <div className="card">
-                <h3 className="font-bold text-primary mb-4">Recent Achievements</h3>
-                <div className="space-y-3">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
-                      <Trophy size={16} className="text-white" />
+                <h3 style={{ fontWeight: 'bold', color: 'var(--primary)', marginBottom: '16px' }}>Recent Achievements</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <div style={{
+                      width: '32px',
+                      height: '32px',
+                      background: 'linear-gradient(135deg, #fbbf24, #ea580c)',
+                      borderRadius: '50%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      <Trophy size={16} style={{ color: 'white' }} />
                     </div>
                     <div>
-                      <div className="text-sm font-semibold text-primary">First Place</div>
-                      <div className="text-xs text-secondary">Weekly focus time</div>
+                      <div style={{ fontSize: '14px', fontWeight: '600', color: 'var(--primary)' }}>First Place</div>
+                      <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Weekly focus time</div>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center">
-                      <Award size={16} className="text-white" />
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <div style={{
+                      width: '32px',
+                      height: '32px',
+                      background: 'linear-gradient(135deg, #4ade80, #3b82f6)',
+                      borderRadius: '50%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      <Award size={16} style={{ color: 'white' }} />
                     </div>
                     <div>
-                      <div className="text-sm font-semibold text-primary">Streak Master</div>
-                      <div className="text-xs text-secondary">7 day streak</div>
+                      <div style={{ fontSize: '14px', fontWeight: '600', color: 'var(--primary)' }}>Streak Master</div>
+                      <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>7 day streak</div>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full flex items-center justify-center">
-                      <TreePine size={16} className="text-white" />
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <div style={{
+                      width: '32px',
+                      height: '32px',
+                      background: 'linear-gradient(135deg, #a78bfa, #ec4899)',
+                      borderRadius: '50%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      <TreePine size={16} style={{ color: 'white' }} />
                     </div>
                     <div>
-                      <div className="text-sm font-semibold text-primary">Tree Grower</div>
-                      <div className="text-xs text-secondary">Reached level 5</div>
+                      <div style={{ fontSize: '14px', fontWeight: '600', color: 'var(--primary)' }}>Tree Grower</div>
+                      <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Reached level 5</div>
                     </div>
                   </div>
                 </div>
@@ -320,19 +388,23 @@ function Leaderboard() {
 
               {/* Competitive Challenges */}
               <div className="card">
-                <h3 className="font-bold text-primary mb-4">Active Challenges</h3>
-                <div className="space-y-3">
-                  <div className="p-3 bg-success bg-opacity-10 rounded-lg">
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm font-semibold text-primary">Weekly Sprint</span>
-                      <span className="text-xs text-secondary">3 days left</span>
+                <h3 style={{ fontWeight: 'bold', color: 'var(--primary)', marginBottom: '16px' }}>Active Challenges</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <div style={{
+                    padding: '12px',
+                    backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                    borderRadius: '8px'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                      <span style={{ fontSize: '14px', fontWeight: '600', color: 'var(--primary)' }}>Weekly Sprint</span>
+                      <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>3 days left</span>
                     </div>
-                    <div className="text-xs text-secondary mb-2">Beat your friends this week</div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div className="bg-success h-2 rounded-full" style={{ width: '70%' }}></div>
+                    <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '8px' }}>Beat your friends this week</div>
+                    <div style={{ width: '100%', backgroundColor: '#e5e7eb', borderRadius: '9999px', height: '8px' }}>
+                      <div style={{ backgroundColor: 'var(--success)', height: '8px', borderRadius: '9999px', width: '70%' }}></div>
                     </div>
                   </div>
-                  <button className="btn btn-outline text-sm w-full">
+                  <button className="btn btn-outline" style={{ fontSize: '14px', width: '100%' }}>
                     <Users size={16} />
                     Join Challenge
                   </button>

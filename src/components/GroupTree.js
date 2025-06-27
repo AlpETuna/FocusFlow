@@ -88,49 +88,74 @@ const GroupTree = () => {
 
   return (
     <div className="page-container">
-      <div className="mb-4">
-        <h1 className="text-3xl font-bold text-primary mb-2">Group Trees</h1>
-        <p className="text-secondary">Grow trees together with your study groups</p>
+      <div style={{ marginBottom: '32px' }}>
+        <h1 style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '8px' }}>Group Trees</h1>
+        <p style={{ color: 'var(--text-secondary)' }}>Grow trees together with your study groups</p>
       </div>
 
       {/* Groups List */}
-      <div className="grid grid-cols-3 mb-4">
-        <div className="col-span-1">
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '32px', marginBottom: '32px' }}>
+        <div>
           <div className="card">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold">Your Groups</h2>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <h2 style={{ fontSize: '1.125rem', fontWeight: '600' }}>Your Groups</h2>
               <button
                 onClick={() => setShowCreateModal(true)}
-                className="btn btn-primary btn-sm"
+                className="btn btn-primary"
+                style={{ fontSize: '14px', padding: '6px 12px' }}
               >
                 <Plus size={16} />
                 Create
               </button>
             </div>
 
-            <div className="space-y-2">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {groups.map(group => (
                 <div
                   key={group.id}
                   onClick={() => setSelectedGroup(group)}
-                  className={`p-3 rounded-lg cursor-pointer transition-all ${
-                    selectedGroup?.id === group.id
-                      ? 'bg-primary text-white'
-                      : 'hover:bg-gray-50'
-                  }`}
+                  style={{
+                    padding: '12px',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s',
+                    backgroundColor: selectedGroup?.id === group.id ? 'var(--primary)' : 'transparent',
+                    color: selectedGroup?.id === group.id ? 'white' : 'inherit',
+                    ':hover': {
+                      backgroundColor: selectedGroup?.id === group.id ? 'var(--primary)' : '#f9fafb'
+                    }
+                  }}
+                  onMouseEnter={(e) => {
+                    if (selectedGroup?.id !== group.id) {
+                      e.currentTarget.style.backgroundColor = '#f9fafb';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (selectedGroup?.id !== group.id) {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                    }
+                  }}
                 >
-                  <div className="flex items-center justify-between">
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <div>
-                      <h3 className="font-semibold">{group.name}</h3>
-                      <p className={`text-sm ${
-                        selectedGroup?.id === group.id ? 'text-white opacity-80' : 'text-secondary'
-                      }`}>
+                      <h3 style={{ fontWeight: '600' }}>{group.name}</h3>
+                      <p style={{
+                        fontSize: '14px',
+                        color: selectedGroup?.id === group.id ? 'rgba(255, 255, 255, 0.8)' : 'var(--text-secondary)'
+                      }}>
                         {group.members.length} members • {group.streak} day streak
                       </p>
                     </div>
                     <div
-                      className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
                       style={{
+                        width: '32px',
+                        height: '32px',
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '12px',
+                        fontWeight: 'bold',
                         backgroundColor: getHealthColor(group.treeHealth),
                         color: 'white'
                       }}
@@ -146,22 +171,23 @@ const GroupTree = () => {
 
         {/* Selected Group Details */}
         {selectedGroup && (
-          <div className="col-span-2">
+          <div>
             <div className="card">
-              <div className="flex justify-between items-start mb-4">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
                 <div>
-                  <h2 className="text-2xl font-bold">{selectedGroup.name}</h2>
-                  <p className="text-secondary">{selectedGroup.goal}</p>
+                  <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{selectedGroup.name}</h2>
+                  <p style={{ color: 'var(--text-secondary)' }}>{selectedGroup.goal}</p>
                 </div>
-                <div className="flex gap-2">
+                <div style={{ display: 'flex', gap: '8px' }}>
                   <button
                     onClick={() => setShowInviteModal(true)}
-                    className="btn btn-outline btn-sm"
+                    className="btn btn-outline"
+                    style={{ fontSize: '14px', padding: '6px 12px' }}
                   >
                     <Plus size={16} />
                     Invite
                   </button>
-                  <button className="btn btn-outline btn-sm">
+                  <button className="btn btn-outline" style={{ fontSize: '14px', padding: '6px 12px' }}>
                     <Settings size={16} />
                   </button>
                 </div>
@@ -169,10 +195,16 @@ const GroupTree = () => {
 
               {/* Tree Health Warning */}
               {selectedGroup.treeHealth < 70 && (
-                <div className="bg-warning bg-opacity-10 border border-warning rounded-lg p-3 mb-4">
-                  <div className="flex items-center gap-2">
-                    <AlertCircle size={20} className="text-warning" />
-                    <p className="text-sm">
+                <div style={{
+                  backgroundColor: 'rgba(251, 146, 60, 0.1)',
+                  border: '1px solid #fb923c',
+                  borderRadius: '8px',
+                  padding: '12px',
+                  marginBottom: '16px'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <AlertCircle size={20} style={{ color: '#fb923c' }} />
+                    <p style={{ fontSize: '14px' }}>
                       Your group tree needs attention! {
                         selectedGroup.members.filter(m => !m.isActive).length
                       } members haven't studied today.
@@ -182,12 +214,15 @@ const GroupTree = () => {
               )}
 
               {/* Group Tree Visualization */}
-              <div className="group-tree-container mb-4">
-                <div className="relative w-full h-full">
+              <div className="group-tree-container" style={{ marginBottom: '16px' }}>
+                <div style={{ position: 'relative', width: '100%', height: '100%' }}>
                   {/* Central Tree */}
                   <div
-                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                     style={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
                       width: `${calculateTreeSize(selectedGroup.treeHealth)}px`,
                       height: `${calculateTreeSize(selectedGroup.treeHealth)}px`
                     }}
@@ -217,7 +252,7 @@ const GroupTree = () => {
                         <div className="group-member-name">
                           {member.name}
                         </div>
-                        <div className="text-xs text-secondary">
+                        <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
                           {member.focusTime}h today
                         </div>
                       </div>
@@ -226,16 +261,26 @@ const GroupTree = () => {
                 </div>
 
                 {/* Tree Health Bar */}
-                <div className="absolute bottom-4 left-4 right-4">
-                  <div className="bg-white bg-opacity-90 rounded-lg p-3">
-                    <div className="flex justify-between text-sm mb-1">
-                      <span className="font-semibold">Tree Health</span>
+                <div style={{
+                  position: 'absolute',
+                  bottom: '16px',
+                  left: '16px',
+                  right: '16px'
+                }}>
+                  <div style={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                    borderRadius: '8px',
+                    padding: '12px'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', marginBottom: '4px' }}>
+                      <span style={{ fontWeight: '600' }}>Tree Health</span>
                       <span>{selectedGroup.treeHealth}%</span>
                     </div>
-                    <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div style={{ height: '8px', backgroundColor: '#e5e7eb', borderRadius: '9999px', overflow: 'hidden' }}>
                       <div
-                        className="h-full transition-all duration-500"
                         style={{
+                          height: '100%',
+                          transition: 'all 0.5s',
                           width: `${selectedGroup.treeHealth}%`,
                           backgroundColor: getHealthColor(selectedGroup.treeHealth)
                         }}
@@ -246,7 +291,7 @@ const GroupTree = () => {
               </div>
 
               {/* Group Stats */}
-              <div className="grid grid-cols-4 gap-3 mb-4">
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '12px', marginBottom: '16px' }}>
                 <div className="stat-card">
                   <div className="stat-value">{selectedGroup.totalFocusTime}h</div>
                   <div className="stat-label">Total Focus</div>
@@ -267,8 +312,8 @@ const GroupTree = () => {
 
               {/* Members List */}
               <div>
-                <h3 className="font-semibold mb-3">Members</h3>
-                <div className="space-y-2">
+                <h3 style={{ fontWeight: '600', marginBottom: '12px' }}>Members</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {selectedGroup.members.map(member => (
                     <div key={member.id} className="friend-item">
                       <div className="friend-avatar">{member.avatar}</div>
@@ -278,9 +323,9 @@ const GroupTree = () => {
                           {member.isActive ? '🟢 Studying now' : '⚪ Last seen 2h ago'}
                         </div>
                       </div>
-                      <div className="text-right">
-                        <div className="font-semibold">{member.focusTime}h</div>
-                        <div className="text-xs text-secondary">today</div>
+                      <div style={{ textAlign: 'right' }}>
+                        <div style={{ fontWeight: '600' }}>{member.focusTime}h</div>
+                        <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>today</div>
                       </div>
                     </div>
                   ))}
@@ -299,13 +344,14 @@ const GroupTree = () => {
               <h3 className="modal-title">Create Study Group</h3>
               <button
                 onClick={() => setShowCreateModal(false)}
-                className="btn btn-outline btn-sm"
+                className="btn btn-outline"
+                style={{ fontSize: '14px', padding: '6px 12px' }}
               >
                 <X size={16} />
               </button>
             </div>
 
-            <div className="space-y-4">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div className="form-group">
                 <label className="form-label">Group Name</label>
                 <input
@@ -328,10 +374,11 @@ const GroupTree = () => {
                 />
               </div>
 
-              <div className="flex gap-3">
+              <div style={{ display: 'flex', gap: '12px' }}>
                 <button
                   onClick={handleCreateGroup}
-                  className="btn btn-primary flex-1"
+                  className="btn btn-primary"
+                  style={{ flex: 1 }}
                   disabled={!groupName || !groupGoal}
                 >
                   <Check size={16} />
@@ -339,7 +386,8 @@ const GroupTree = () => {
                 </button>
                 <button
                   onClick={() => setShowCreateModal(false)}
-                  className="btn btn-outline flex-1"
+                  className="btn btn-outline"
+                  style={{ flex: 1 }}
                 >
                   Cancel
                 </button>
@@ -357,13 +405,14 @@ const GroupTree = () => {
               <h3 className="modal-title">Invite to {selectedGroup?.name}</h3>
               <button
                 onClick={() => setShowInviteModal(false)}
-                className="btn btn-outline btn-sm"
+                className="btn btn-outline"
+                style={{ fontSize: '14px', padding: '6px 12px' }}
               >
                 <X size={16} />
               </button>
             </div>
 
-            <div className="space-y-4">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div className="form-group">
                 <label className="form-label">Friend's Email</label>
                 <input
@@ -375,17 +424,23 @@ const GroupTree = () => {
                 />
               </div>
 
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                <p className="text-sm text-blue-800">
-                  When all members maintain their daily focus goals, the group tree thrives. 
+              <div style={{
+                backgroundColor: '#eff6ff',
+                border: '1px solid #bfdbfe',
+                borderRadius: '8px',
+                padding: '12px'
+              }}>
+                <p style={{ fontSize: '14px', color: '#1e40af' }}>
+                  When all members maintain their daily focus goals, the group tree thrives.
                   If members skip days, the tree's health decreases!
                 </p>
               </div>
 
-              <div className="flex gap-3">
+              <div style={{ display: 'flex', gap: '12px' }}>
                 <button
                   onClick={handleInviteMember}
-                  className="btn btn-primary flex-1"
+                  className="btn btn-primary"
+                  style={{ flex: 1 }}
                   disabled={!inviteEmail}
                 >
                   <Plus size={16} />
@@ -393,7 +448,8 @@ const GroupTree = () => {
                 </button>
                 <button
                   onClick={() => setShowInviteModal(false)}
-                  className="btn btn-outline flex-1"
+                  className="btn btn-outline"
+                  style={{ flex: 1 }}
                 >
                   Cancel
                 </button>

@@ -118,45 +118,51 @@ function Profile() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-sky-blue to-grass-green">
+    <div style={{
+      minHeight: '100vh',
+      background: 'linear-gradient(to bottom, #87ceeb, #228b22)'
+    }}>
       <div className="grass-background"></div>
       
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-6xl mx-auto">
+      <div className="container" style={{ padding: '32px 16px' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-white mb-2">
+          <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+            <h1 style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'white', marginBottom: '8px' }}>
               Your Profile 👤
             </h1>
-            <p className="text-lg text-cream">
+            <p style={{ fontSize: '1.125rem', color: '#fef3c7' }}>
               Track your progress and celebrate your achievements
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '32px' }}>
             {/* Profile Info */}
-            <div className="lg:col-span-1">
+            <div>
               <div className="card">
-                <div className="flex justify-between items-start mb-6">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
                   <h2 className="card-title">Profile Information</h2>
                   {!isEditing ? (
                     <button
                       onClick={() => setIsEditing(true)}
-                      className="btn btn-outline p-2"
+                      className="btn btn-outline"
+                      style={{ padding: '8px' }}
                     >
                       <Edit3 size={16} />
                     </button>
                   ) : (
-                    <div className="flex space-x-2">
+                    <div style={{ display: 'flex', gap: '8px' }}>
                       <button
                         onClick={handleEditSubmit}
-                        className="btn btn-primary p-2"
+                        className="btn btn-primary"
+                        style={{ padding: '8px' }}
                       >
                         <Save size={16} />
                       </button>
                       <button
                         onClick={handleEditCancel}
-                        className="btn btn-outline p-2"
+                        className="btn btn-outline"
+                        style={{ padding: '8px' }}
                       >
                         <X size={16} />
                       </button>
@@ -165,7 +171,7 @@ function Profile() {
                 </div>
 
                 {isEditing ? (
-                  <form onSubmit={handleEditSubmit} className="space-y-4">
+                  <form onSubmit={handleEditSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                     <div className="form-group">
                       <label className="form-label">Name</label>
                       <input
@@ -188,40 +194,45 @@ function Profile() {
                     </div>
                   </form>
                 ) : (
-                  <div className="space-y-4">
-                    <div className="flex items-center space-x-3">
-                      <User size={20} className="text-forest-green" />
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <User size={20} style={{ color: '#228b22' }} />
                       <div>
-                        <div className="font-medium text-forest-green">{user?.name}</div>
-                        <div className="text-sm text-leaf-green">Name</div>
+                        <div style={{ fontWeight: '500', color: '#228b22' }}>{user?.name}</div>
+                        <div style={{ fontSize: '14px', color: '#32cd32' }}>Name</div>
                       </div>
                     </div>
                     
-                    <div className="flex items-center space-x-3">
-                      <Mail size={20} className="text-forest-green" />
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <Mail size={20} style={{ color: '#228b22' }} />
                       <div>
-                        <div className="font-medium text-forest-green">{user?.email}</div>
-                        <div className="text-sm text-leaf-green">Email</div>
+                        <div style={{ fontWeight: '500', color: '#228b22' }}>{user?.email}</div>
+                        <div style={{ fontSize: '14px', color: '#32cd32' }}>Email</div>
                       </div>
                     </div>
                     
-                    <div className="flex items-center space-x-3">
-                      <Calendar size={20} className="text-forest-green" />
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <Calendar size={20} style={{ color: '#228b22' }} />
                       <div>
-                        <div className="font-medium text-forest-green">{getJoinDate()}</div>
-                        <div className="text-sm text-leaf-green">Member since</div>
+                        <div style={{ fontWeight: '500', color: '#228b22' }}>{getJoinDate()}</div>
+                        <div style={{ fontSize: '14px', color: '#32cd32' }}>Member since</div>
                       </div>
                     </div>
                   </div>
                 )}
 
                 {/* Tree Status */}
-                <div className="mt-6 p-4 bg-sage-green bg-opacity-20 rounded-lg">
-                  <div className="text-center">
-                    <div className="text-lg font-bold text-forest-green mb-1">
+                <div style={{
+                  marginTop: '24px',
+                  padding: '16px',
+                  backgroundColor: 'rgba(143, 188, 143, 0.2)',
+                  borderRadius: '8px'
+                }}>
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ fontSize: '1.125rem', fontWeight: 'bold', color: '#228b22', marginBottom: '4px' }}>
                       {getTreeLevelDescription()}
                     </div>
-                    <div className="text-sm text-leaf-green">
+                    <div style={{ fontSize: '14px', color: '#32cd32' }}>
                       Level {user?.treeLevel || 1} Focus Tree
                     </div>
                   </div>
@@ -229,18 +240,18 @@ function Profile() {
               </div>
 
               {/* Tree Visualization */}
-              <div className="card mt-6">
+              <div className="card" style={{ marginTop: '24px' }}>
                 <div className="card-header">
                   <h3 className="card-title">Your Focus Tree</h3>
                 </div>
-                <div className="flex justify-center">
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
                   <TreeVisualization level={user?.treeLevel || 1} animated={false} />
                 </div>
               </div>
             </div>
 
             {/* Stats and Achievements */}
-            <div className="lg:col-span-2 space-y-8">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
               {/* Statistics */}
               <div className="card">
                 <div className="card-header">
@@ -248,17 +259,21 @@ function Profile() {
                   <p className="card-subtitle">Track your focus journey</p>
                 </div>
                 
-                <div className="grid grid-cols-2 gap-4">
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                   {stats.map((stat, index) => (
-                    <div key={index} className="p-4 bg-sage-green bg-opacity-20 rounded-lg">
-                      <div className={`${stat.color} mb-2 flex justify-center`}>
+                    <div key={index} style={{
+                      padding: '16px',
+                      backgroundColor: 'rgba(143, 188, 143, 0.2)',
+                      borderRadius: '8px'
+                    }}>
+                      <div style={{ marginBottom: '8px', display: 'flex', justifyContent: 'center', color: stat.color === 'text-leaf-green' ? '#32cd32' : stat.color === 'text-forest-green' ? '#228b22' : stat.color === 'text-sage-green' ? '#9CAF88' : '#90EE90' }}>
                         {stat.icon}
                       </div>
-                      <div className="text-center">
-                        <div className="text-xl font-bold text-forest-green">
+                      <div style={{ textAlign: 'center' }}>
+                        <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#228b22' }}>
                           {stat.value}
                         </div>
-                        <div className="text-sm text-leaf-green">
+                        <div style={{ fontSize: '14px', color: '#32cd32' }}>
                           {stat.label}
                         </div>
                       </div>
@@ -267,22 +282,30 @@ function Profile() {
                 </div>
 
                 {/* Progress to Next Level */}
-                <div className="mt-6">
-                  <div className="flex justify-between text-sm text-leaf-green mb-2">
+                <div style={{ marginTop: '24px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: '#32cd32', marginBottom: '8px' }}>
                     <span>Progress to Level {(user?.treeLevel || 1) + 1}</span>
                     <span>
                       {Math.min(((user?.totalFocusTime || 0) % 60) / 60 * 100, 100).toFixed(0)}%
                     </span>
                   </div>
-                  <div className="w-full bg-sage-green bg-opacity-30 rounded-full h-3">
-                    <div 
-                      className="bg-gradient-to-r from-leaf-green to-forest-green h-3 rounded-full transition-all duration-500"
-                      style={{ 
-                        width: `${Math.min(((user?.totalFocusTime || 0) % 60) / 60 * 100, 100)}%` 
+                  <div style={{
+                    width: '100%',
+                    backgroundColor: 'rgba(143, 188, 143, 0.3)',
+                    borderRadius: '9999px',
+                    height: '12px'
+                  }}>
+                    <div
+                      style={{
+                        background: 'linear-gradient(to right, #32cd32, #228b22)',
+                        height: '12px',
+                        borderRadius: '9999px',
+                        transition: 'all 0.5s',
+                        width: `${Math.min(((user?.totalFocusTime || 0) % 60) / 60 * 100, 100)}%`
                       }}
                     ></div>
                   </div>
-                  <div className="text-xs text-center text-leaf-green mt-1">
+                  <div style={{ fontSize: '12px', textAlign: 'center', color: '#32cd32', marginTop: '4px' }}>
                     {60 - ((user?.totalFocusTime || 0) % 60)} minutes to next level
                   </div>
                 </div>
@@ -297,31 +320,31 @@ function Profile() {
                   </p>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                   {achievements.map((achievement) => (
                     <div
                       key={achievement.id}
-                      className={`p-4 rounded-lg border-2 transition-all ${
-                        achievement.unlocked
-                          ? 'bg-gradient-to-r from-leaf-green to-forest-green text-white border-forest-green'
-                          : 'bg-sage-green bg-opacity-20 border-sage-green border-opacity-50'
-                      }`}
+                      style={{
+                        padding: '16px',
+                        borderRadius: '8px',
+                        border: '2px solid',
+                        transition: 'all 0.3s',
+                        background: achievement.unlocked ? 'linear-gradient(to right, #32cd32, #228b22)' : 'rgba(143, 188, 143, 0.2)',
+                        color: achievement.unlocked ? 'white' : 'inherit',
+                        borderColor: achievement.unlocked ? '#228b22' : 'rgba(143, 188, 143, 0.5)'
+                      }}
                     >
-                      <div className="flex items-start space-x-3">
-                        <div className="text-2xl">{achievement.icon}</div>
-                        <div className="flex-1">
-                          <div className={`font-bold ${
-                            achievement.unlocked ? 'text-white' : 'text-forest-green'
-                          }`}>
+                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                        <div style={{ fontSize: '1.5rem' }}>{achievement.icon}</div>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ fontWeight: 'bold', color: achievement.unlocked ? 'white' : '#228b22' }}>
                             {achievement.name}
                           </div>
-                          <div className={`text-sm ${
-                            achievement.unlocked ? 'text-cream' : 'text-leaf-green'
-                          }`}>
+                          <div style={{ fontSize: '14px', color: achievement.unlocked ? '#fef3c7' : '#32cd32' }}>
                             {achievement.description}
                           </div>
                           {achievement.unlocked && (
-                            <div className="text-xs text-cream mt-1 font-medium">
+                            <div style={{ fontSize: '12px', color: '#fef3c7', marginTop: '4px', fontWeight: '500' }}>
                               ✓ Unlocked
                             </div>
                           )}
@@ -333,24 +356,24 @@ function Profile() {
               </div>
 
               {/* Focus Tips */}
-              <div className="card bg-gradient-to-r from-leaf-green to-forest-green text-white">
+              <div className="card" style={{ background: 'linear-gradient(to right, #32cd32, #228b22)', color: 'white' }}>
                 <div className="card-header">
-                  <h2 className="card-title text-white">💡 Focus Tips</h2>
+                  <h2 className="card-title" style={{ color: 'white' }}>💡 Focus Tips</h2>
                 </div>
-                <div className="space-y-3 text-sm">
-                  <div className="flex items-start space-x-2">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '14px' }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
                     <span>🌱</span>
                     <span>Start with shorter sessions (15-25 minutes) and gradually increase duration.</span>
                   </div>
-                  <div className="flex items-start space-x-2">
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
                     <span>🌿</span>
                     <span>Take regular breaks to maintain focus quality throughout the day.</span>
                   </div>
-                  <div className="flex items-start space-x-2">
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
                     <span>🌳</span>
                     <span>Consistency is key - daily short sessions beat occasional long ones.</span>
                   </div>
-                  <div className="flex items-start space-x-2">
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
                     <span>🌲</span>
                     <span>Remove distractions and create a dedicated focus environment.</span>
                   </div>

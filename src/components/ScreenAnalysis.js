@@ -141,45 +141,57 @@ const ScreenAnalysis = ({ sessionId, onAnalysisResult, isActive = false }) => {
 
   return (
     <div className="analysis-card">
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-semibold">AI Focus Monitoring</h3>
-        <div className="flex items-center gap-2">
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+        <h3 style={{ fontSize: '1.125rem', fontWeight: '600' }}>AI Focus Monitoring</h3>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           {isCapturing ? (
-            <span className="flex items-center gap-2 text-sm text-success">
-              <div className="w-2 h-2 bg-success rounded-full animate-pulse"></div>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', color: 'var(--success)' }}>
+              <div style={{ width: '8px', height: '8px', backgroundColor: 'var(--success)', borderRadius: '50%', animation: 'pulse 2s infinite' }}></div>
               Active
             </span>
           ) : (
-            <span className="text-sm text-secondary">Inactive</span>
+            <span style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Inactive</span>
           )}
         </div>
       </div>
 
       {error && (
-        <div className="bg-danger bg-opacity-10 border border-danger rounded-lg p-3 mb-4">
-          <div className="flex items-center gap-2">
-            <AlertCircle size={16} className="text-danger" />
-            <p className="text-sm text-danger">{error}</p>
+        <div style={{
+          backgroundColor: 'rgba(220, 20, 60, 0.1)',
+          border: '1px solid var(--danger)',
+          borderRadius: '8px',
+          padding: '12px',
+          marginBottom: '16px'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <AlertCircle size={16} style={{ color: 'var(--danger)' }} />
+            <p style={{ fontSize: '14px', color: 'var(--danger)' }}>{error}</p>
           </div>
         </div>
       )}
 
       {!permissionGranted && !isCapturing && (
-        <div className="text-center py-6">
-          <Monitor size={48} className="mx-auto mb-4 text-secondary opacity-50" />
-          <h4 className="font-semibold mb-2">Enable AI Monitoring</h4>
-          <p className="text-sm text-secondary mb-4">
+        <div style={{ textAlign: 'center', padding: '24px 0' }}>
+          <Monitor size={48} style={{ margin: '0 auto 16px auto', color: 'var(--text-secondary)', opacity: 0.5 }} />
+          <h4 style={{ fontWeight: '600', marginBottom: '8px' }}>Enable AI Monitoring</h4>
+          <p style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '16px' }}>
             AI will analyze your screen periodically to track focus levels
           </p>
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
-            <div className="flex items-start gap-2">
-              <Shield size={16} className="text-blue-600 mt-0.5" />
-              <p className="text-xs text-blue-800">
+          <div style={{
+            backgroundColor: '#eff6ff',
+            border: '1px solid #bfdbfe',
+            borderRadius: '8px',
+            padding: '12px',
+            marginBottom: '16px'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+              <Shield size={16} style={{ color: '#2563eb', marginTop: '2px' }} />
+              <p style={{ fontSize: '12px', color: '#1e40af' }}>
                 Your privacy is protected. Screenshots are analyzed instantly and never stored.
               </p>
             </div>
           </div>
-          <button 
+          <button
             onClick={requestPermission}
             className="btn btn-primary"
             disabled={!sessionId}
@@ -190,21 +202,21 @@ const ScreenAnalysis = ({ sessionId, onAnalysisResult, isActive = false }) => {
       )}
 
       {isCapturing && (
-        <div className="space-y-4">
-          <div className="flex gap-2">
-            <button onClick={analyzeNow} className="btn btn-secondary btn-sm">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button onClick={analyzeNow} className="btn btn-secondary" style={{ fontSize: '14px', padding: '6px 12px' }}>
               Analyze Now
             </button>
-            <button onClick={stopAnalysis} className="btn btn-outline btn-sm">
+            <button onClick={stopAnalysis} className="btn btn-outline" style={{ fontSize: '14px', padding: '6px 12px' }}>
               Stop Monitoring
             </button>
           </div>
 
           {lastAnalysis && (
             <div className="focus-score-display">
-              <div 
+              <div
                 className="focus-score-circle"
-                style={{ 
+                style={{
                   backgroundColor: `${getFocusScoreColor(lastAnalysis.focusScore)}20`,
                   color: getFocusScoreColor(lastAnalysis.focusScore)
                 }}
@@ -212,17 +224,17 @@ const ScreenAnalysis = ({ sessionId, onAnalysisResult, isActive = false }) => {
                 <span className="focus-score-value">{lastAnalysis.focusScore}</span>
                 <span className="focus-score-label">Score</span>
               </div>
-              <div className="flex-1">
-                <p className="font-semibold" style={{ color: getFocusScoreColor(lastAnalysis.focusScore) }}>
+              <div style={{ flex: 1 }}>
+                <p style={{ fontWeight: '600', color: getFocusScoreColor(lastAnalysis.focusScore) }}>
                   {getFocusScoreLabel(lastAnalysis.focusScore)}
                 </p>
-                <p className="text-sm text-secondary">
-                  Activity: <span className="capitalize">{lastAnalysis.category}</span>
+                <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>
+                  Activity: <span style={{ textTransform: 'capitalize' }}>{lastAnalysis.category}</span>
                 </p>
                 {lastAnalysis.reasoning && (
-                  <p className="text-xs text-secondary mt-1">{lastAnalysis.reasoning}</p>
+                  <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '4px' }}>{lastAnalysis.reasoning}</p>
                 )}
-                <p className="text-xs text-gray-400 mt-2">
+                <p style={{ fontSize: '12px', color: '#9ca3af', marginTop: '8px' }}>
                   Last analyzed: {new Date(lastAnalysis.timestamp).toLocaleTimeString()}
                 </p>
               </div>
