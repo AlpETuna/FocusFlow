@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Users, Plus, Settings, AlertCircle, Check, X, TreePine } from 'lucide-react';
+import { Plus, Settings, AlertCircle, Check, X, TreePine } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import api from '../services/api';
 
 const GroupTree = () => {
   const { user } = useAuth();

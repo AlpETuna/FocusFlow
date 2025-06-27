@@ -23,8 +23,6 @@ function FocusSession() {
   
   // AI Monitoring States
   const [aiMonitoring, setAiMonitoring] = useState(true);
-  const [focusScores, setFocusScores] = useState([]);
-  const [currentFocusScore, setCurrentFocusScore] = useState(null);
 
   // Timer presets
   const presets = {
@@ -51,13 +49,11 @@ function FocusSession() {
     if (timeLeft === 0 && isActive) {
       handleSessionComplete();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeLeft, isActive]);
 
   // Handle analysis results from ScreenAnalysis component
   const handleAnalysisResult = (analysis) => {
-    setCurrentFocusScore(analysis);
-    setFocusScores(prev => [...prev.slice(-9), analysis]);
-    
     // Handle low focus scores
     if (analysis.focusScore < 40 && isActive && !isPaused) {
       // Show warning for low focus

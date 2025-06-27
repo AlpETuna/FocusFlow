@@ -95,13 +95,6 @@ function Leaderboard() {
     return `${hours}h ${mins}m`;
   };
 
-  const getRankClass = (rank) => {
-    if (rank === 1) return 'rank-1';
-    if (rank === 2) return 'rank-2';
-    if (rank === 3) return 'rank-3';
-    return 'rank-other';
-  };
-
   const getMetricValue = (item) => {
     switch (selectedMetric) {
       case 'focusTime':

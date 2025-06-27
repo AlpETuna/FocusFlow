@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { Users, UserPlus, Search, MessageCircle, Trophy, Clock } from 'lucide-react';
+import { Users, UserPlus, Search, MessageCircle } from 'lucide-react';
 
 function Friends() {
   const { user } = useAuth();

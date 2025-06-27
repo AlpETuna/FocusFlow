@@ -65,6 +65,7 @@ const ScreenAnalysis = ({ sessionId, onAnalysisResult, isActive = false }) => {
         stopAnalysis();
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isActive, sessionId, screenAnalysis]);
 
   const requestPermission = async () => {
