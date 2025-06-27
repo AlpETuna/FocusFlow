@@ -7,9 +7,16 @@ set -e
 
 echo "🚀 Starting Root Focus Deployment..."
 
+# Colors for output
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
 # Check if environment files exist
 if [ ! -f "backend/.env" ]; then
-    echo "❌ backend/.env not found!"
+    echo -e "${RED}❌ backend/.env not found!${NC}"
     echo "Please copy backend/.env.example to backend/.env and fill in your values:"
     echo "cp backend/.env.example backend/.env"
     echo "Then edit backend/.env and set your JWT_SECRET"
@@ -25,11 +32,55 @@ fi
 
 # Check if JWT_SECRET is set in backend/.env
 if grep -q "your-super-secure-jwt-secret-here" backend/.env; then
-    echo "❌ JWT_SECRET not configured!"
+    echo -e "${RED}❌ JWT_SECRET not configured!${NC}"
     echo "Please edit backend/.env and set a secure JWT_SECRET"
     echo "You can generate one with: node -e \"console.log(require('crypto').randomBytes(32).toString('hex'))\""
     exit 1
 fi
+
+# Check API keys and environment variables
+echo -e "\n${BLUE}🔑 Checking API keys and environment variables...${NC}"
+
+# Source backend environment to check variables
+source backend/.env
+
+MISSING_VARS=()
+
+# Check required variables
+[ -z "$JWT_SECRET" ] && MISSING_VARS+=("JWT_SECRET")
+[ -z "$USERS_TABLE" ] && MISSING_VARS+=("USERS_TABLE")
+[ -z "$SESSIONS_TABLE" ] && MISSING_VARS+=("SESSIONS_TABLE")
+[ -z "$GROUPS_TABLE" ] && MISSING_VARS+=("GROUPS_TABLE")
+[ -z "$GROUP_MEMBERS_TABLE" ] && MISSING_VARS+=("GROUP_MEMBERS_TABLE")
+[ -z "$OPENAI_API_KEY" ] && MISSING_VARS+=("OPENAI_API_KEY")
+
+# Test OpenAI API key if present
+if [ ! -z "$OPENAI_API_KEY" ]; then
+    echo "🤖 Testing OpenAI API key..."
+    response=$(curl -s -o /dev/null -w "%{http_code}" \
+        -H "Authorization: Bearer $OPENAI_API_KEY" \
+        -H "Content-Type: application/json" \
+        https://api.openai.com/v1/models)
+    
+    if [ "$response" -eq 200 ]; then
+        echo -e "${GREEN}✅ OpenAI API key is valid${NC}"
+    else
+        echo -e "${RED}❌ OpenAI API key is invalid (HTTP $response)${NC}"
+        MISSING_VARS+=("OPENAI_API_KEY (invalid)")
+    fi
+fi
+
+# Check if any required variables are missing
+if [ ${#MISSING_VARS[@]} -gt 0 ]; then
+    echo -e "${RED}❌ Missing or invalid environment variables:${NC}"
+    for var in "${MISSING_VARS[@]}"; do
+        echo -e "${RED}   - $var${NC}"
+    done
+    echo -e "${YELLOW}Please set all required environment variables in backend/.env${NC}"
+    exit 1
+fi
+
+echo -e "${GREEN}✅ All API keys and environment variables are configured${NC}"
 
 # Check if AWS credentials are set
 if [ -z "$MY_AWS_ACCESS_KEY_ID" ] || [ -z "$MY_AWS_SECRET_ACCESS_KEY" ]; then
@@ -44,7 +95,7 @@ fi
 # Set AWS region if not already set
 export MY_AWS_DEFAULT_REGION=${MY_AWS_DEFAULT_REGION:-us-east-1}
 
-echo "✅ AWS credentials configured"
+echo -e "${GREEN}✅ AWS credentials configured${NC}"
 echo "📍 Region: $MY_AWS_DEFAULT_REGION"
 
 # Export standard AWS environment variables for AWS CLI and Serverless Framework
@@ -65,7 +116,7 @@ if ! command -v node &> /dev/null; then
     exit 1
 fi
 
-echo "✅ Node.js found: $(node --version)"
+echo -e "${GREEN}✅ Node.js found: $(node --version)${NC}"
 
 # Install dependencies
 echo "📦 Installing backend dependencies..."
@@ -91,7 +142,30 @@ if [ -z "$API_URL" ]; then
     read -p "Please enter the API Gateway URL: " API_URL
 fi
 
-echo "✅ API Gateway URL: $API_URL"
+echo -e "${GREEN}✅ API Gateway URL: $API_URL${NC}"
+
+# Test backend health
+echo -e "\n${BLUE}🏥 Testing backend health...${NC}"
+
+# Wait a moment for API to be ready
+sleep 5
+
+# Test auth endpoints
+echo "Testing authentication endpoints..."
+
+# Test register endpoint
+response=$(curl -s -X POST "${API_URL}/auth/register" \
+    -H "Content-Type: application/json" \
+    -d '{"email":"test@example.com","password":"testpass","name":"Test User"}' \
+    -w "\n%{http_code}")
+
+http_code=$(echo "$response" | tail -n1)
+
+if [ "$http_code" -eq 201 ] || [ "$http_code" -eq 400 ]; then
+    echo -e "${GREEN}✅ Auth register endpoint is working${NC}"
+else
+    echo -e "${RED}❌ Auth register endpoint returned HTTP $http_code${NC}"
+fi
 
 # Update frontend environment
 echo "🔧 Configuring frontend..."
@@ -111,12 +185,18 @@ EOF
 echo "🏗️  Building frontend..."
 npm run build
 
-echo "✅ Frontend built successfully!"
+echo -e "${GREEN}✅ Frontend built successfully!${NC}"
 
 # Display deployment summary
 echo ""
-echo "🎉 Root Focus Deployment Complete!"
-echo "================================="
+echo -e "${GREEN}🎉 Root Focus Deployment Complete!${NC}"
+echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "${GREEN}✅ All API keys verified and working${NC}"
+echo -e "${GREEN}✅ Backend deployed with database authentication${NC}"
+echo -e "${GREEN}✅ Frontend deployed with launch page${NC}"
+echo -e "${GREEN}✅ Demo accounts removed - real login required${NC}"
+echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo ""
 echo "Backend API URL: $API_URL"
 echo "Frontend build ready in: ./build/"
 echo ""

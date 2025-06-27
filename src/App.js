@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import LandingPage from './components/LandingPage';
+import LaunchPage from './components/LaunchPage';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import FocusSession from './components/FocusSession';
@@ -18,6 +18,7 @@ function AppContent() {
   if (loading) {
     return (
       <div className="loading-screen">
+        <div className="loading-sky-clouds"></div>
         <div className="loading-tree-container">
           <div className="loading-tree-trunk"></div>
           <div className="loading-tree-crown"></div>
@@ -36,8 +37,8 @@ function AppContent() {
       {user && <Navbar />}
       <Routes>
         <Route
-          path="/home"
-          element={<LandingPage />}
+          path="/launch"
+          element={!user ? <LaunchPage /> : <Navigate to="/dashboard" />}
         />
         <Route
           path="/login"
@@ -45,31 +46,31 @@ function AppContent() {
         />
         <Route
           path="/dashboard"
-          element={user ? <Dashboard /> : <Navigate to="/login" />}
+          element={user ? <Dashboard /> : <Navigate to="/launch" />}
         />
         <Route
           path="/focus"
-          element={user ? <FocusSession /> : <Navigate to="/login" />}
+          element={user ? <FocusSession /> : <Navigate to="/launch" />}
         />
         <Route
           path="/groups"
-          element={user ? <GroupTree /> : <Navigate to="/login" />}
+          element={user ? <GroupTree /> : <Navigate to="/launch" />}
         />
         <Route
           path="/friends"
-          element={user ? <Friends /> : <Navigate to="/login" />}
+          element={user ? <Friends /> : <Navigate to="/launch" />}
         />
         <Route
           path="/leaderboard"
-          element={user ? <Leaderboard /> : <Navigate to="/login" />}
+          element={user ? <Leaderboard /> : <Navigate to="/launch" />}
         />
         <Route
           path="/profile"
-          element={user ? <Profile /> : <Navigate to="/login" />}
+          element={user ? <Profile /> : <Navigate to="/launch" />}
         />
         <Route
           path="/"
-          element={<Navigate to={user ? "/dashboard" : "/home"} />}
+          element={<Navigate to={user ? "/dashboard" : "/launch"} />}
         />
       </Routes>
     </div>

@@ -3,7 +3,7 @@
 class RootFocusAPI {
   constructor(baseURL = process.env.REACT_APP_API_URL || 'https://your-api-gateway-url.amazonaws.com/dev') {
     this.baseURL = baseURL;
-    this.token = localStorage.getItem('rootfocus_token');
+    this.token = localStorage.getItem('focusflow_token');
   }
 
   // Set authentication token

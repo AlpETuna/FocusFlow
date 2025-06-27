@@ -159,119 +159,143 @@ body {
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background: var(--background);
+  background: linear-gradient(180deg, #87CEEB 0%, #FFFFFF 60%, #F0FFF0 100%);
   position: relative;
   overflow: hidden;
 }
 
+/* Animated Sky Background */
+.loading-sky-clouds {
+  position: absolute;
+  top: 0;
+  left: -20%;
+  width: 140%;
+  height: 100%;
+  opacity: 0.4;
+  background: radial-gradient(ellipse at center, rgba(255,255,255,0.8) 0%, transparent 70%);
+  filter: blur(40px);
+  animation: clouds-drift 20s linear infinite;
+}
+
+@keyframes clouds-drift {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100px);
+  }
+}
+
+/* Grass Foreground */
 .loading-screen::before {
   content: '';
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 100px;
-  background: linear-gradient(to top, var(--accent-light), transparent);
-  opacity: 0.3;
-  animation: grassGrow 3s ease-out;
+  height: 150px;
+  background: linear-gradient(180deg, transparent 0%, #4CAF50 50%, #388E3C 100%);
+  z-index: 1;
 }
 
 .loading-tree-container {
   position: relative;
-  width: 200px;
-  height: 200px;
-  margin-bottom: 20px;
+  width: 120px;
+  height: 150px;
+  margin-bottom: 2rem;
+  z-index: 2;
 }
 
 .loading-tree-trunk {
   position: absolute;
-  bottom: 20px;
+  bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 12px;
-  height: 0;
-  background: var(--earth);
-  border-radius: 6px;
-  animation: growTrunk 2s ease-out forwards;
+  width: 20px;
+  height: 50px;
+  background: linear-gradient(to bottom, #8b4513, #654321);
+  border-radius: 0 0 5px 5px;
 }
 
 .loading-tree-crown {
   position: absolute;
-  bottom: 60px;
+  bottom: 40px;
   left: 50%;
   transform: translateX(-50%);
   width: 0;
   height: 0;
-  background: var(--primary);
-  border-radius: 50%;
-  animation: growCrown 1.5s ease-out 1s forwards;
+  border-left: 60px solid transparent;
+  border-right: 60px solid transparent;
+  border-bottom: 100px solid #2d5016;
+  animation: tree-pulse-grow 3000ms ease-in-out infinite;
 }
 
 .loading-tree-leaves {
   position: absolute;
-  bottom: 70px;
+  bottom: 80px;
   left: 50%;
   transform: translateX(-50%);
-  width: 0;
-  height: 0;
-  background: var(--accent);
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle, #4CAF50 0%, #2d5016 70%);
   border-radius: 50%;
-  animation: growLeaves 1s ease-out 2s forwards;
+  opacity: 0.8;
+  animation: tree-pulse-grow 3000ms ease-in-out infinite;
+}
+
+@keyframes tree-pulse-grow {
+  0%, 100% {
+    transform: translateX(-50%) scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateX(-50%) scale(1.15);
+    opacity: 1;
+  }
 }
 
 .loading-text {
   color: var(--text-primary);
-  font-size: 18px;
+  font-size: 1.25rem;
   font-weight: 600;
-  margin-top: 20px;
-  animation: fadeInOut 2s ease-in-out infinite;
+  margin-bottom: 1rem;
+  animation: fade-in-out 2s ease-in-out infinite;
+  z-index: 2;
+  font-family: Inter, sans-serif;
+}
+
+@keyframes fade-in-out {
+  0%, 100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 .loading-progress {
   width: 200px;
   height: 4px;
-  background: var(--border);
+  background-color: rgba(45, 80, 22, 0.2);
   border-radius: 2px;
   overflow: hidden;
-  margin-top: 16px;
+  z-index: 2;
 }
 
 .loading-progress-bar {
   height: 100%;
-  background: linear-gradient(90deg, var(--primary), var(--accent));
-  border-radius: 2px;
-  animation: growProgress 3s ease-out infinite;
+  background-color: #2d5016;
+  width: 0%;
+  animation: progress 3s ease-in-out infinite;
 }
 
-/* Tree Growth Animations */
-@keyframes growTrunk {
-  from { height: 0; }
-  to { height: 60px; }
-}
-
-@keyframes growCrown {
-  from { width: 0; height: 0; }
-  to { width: 80px; height: 80px; }
-}
-
-@keyframes growLeaves {
-  from { width: 0; height: 0; }
-  to { width: 100px; height: 100px; }
-}
-
-@keyframes grassGrow {
-  from { height: 0; opacity: 0; }
-  to { height: 100px; opacity: 0.3; }
-}
-
-@keyframes fadeInOut {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
-}
-
-@keyframes growProgress {
-  0% { width: 0%; }
-  100% { width: 100%; }
+@keyframes progress {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
 }
 
 @keyframes spin {
