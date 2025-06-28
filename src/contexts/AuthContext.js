@@ -12,21 +12,24 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check for existing authentication token
+    // Check for existing user data
     const initializeAuth = async () => {
       try {
-        // Check if we have a stored token
-        const token = api.getToken();
-        if (token) {
-          // Verify token by fetching user profile
+        // Check if we have a stored user
+        const storedUser = api.getStoredUser();
+        if (storedUser) {
+          // Verify user by fetching profile
           const response = await api.getProfile();
           if (response.user) {
             setUser(response.user);
+          } else {
+            // User data is invalid, clear it
+            api.logout();
           }
         }
       } catch (error) {
         console.error('Auth initialization error:', error);
-        // Invalid token, clear it
+        // Invalid user data, clear it
         api.logout();
       } finally {
         setLoading(false);

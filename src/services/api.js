@@ -3,28 +3,39 @@
 class RootFocusAPI {
   constructor(baseURL = process.env.REACT_APP_API_URL || 'https://your-api-gateway-url.amazonaws.com/dev') {
     this.baseURL = baseURL;
-    this.token = localStorage.getItem('focusflow_token');
+    this.user = this.getStoredUser();
   }
 
-  // Set authentication token
-  setToken(token) {
-    this.token = token;
-    if (token) {
-      localStorage.setItem('focusflow_token', token);
+  // Set user data (replaces token-based auth)
+  setUser(user) {
+    this.user = user;
+    if (user) {
+      localStorage.setItem('focusflow_user', JSON.stringify(user));
     } else {
-      localStorage.removeItem('focusflow_token');
+      localStorage.removeItem('focusflow_user');
     }
   }
 
-  // Get authentication token
-  getToken() {
-    return this.token || localStorage.getItem('focusflow_token');
+  // Get stored user data
+  getStoredUser() {
+    try {
+      const stored = localStorage.getItem('focusflow_user');
+      return stored ? JSON.parse(stored) : null;
+    } catch (error) {
+      console.error('Error parsing stored user:', error);
+      return null;
+    }
+  }
+
+  // Get user ID for headers
+  getUserId() {
+    return this.user?.userId || null;
   }
 
   // Make authenticated request
   async request(endpoint, options = {}) {
     const url = `${this.baseURL}${endpoint}`;
-    const token = this.getToken();
+    const userId = this.getUserId();
 
     const config = {
       headers: {
@@ -34,8 +45,9 @@ class RootFocusAPI {
       ...options,
     };
 
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    // Use x-user-id header instead of Authorization Bearer token
+    if (userId) {
+      config.headers['x-user-id'] = userId;
     }
 
     try {
@@ -66,8 +78,8 @@ class RootFocusAPI {
       body: JSON.stringify({ email, password, name }),
     });
 
-    if (response.token) {
-      this.setToken(response.token);
+    if (response.user) {
+      this.setUser(response.user);
     }
 
     return response;
@@ -79,8 +91,8 @@ class RootFocusAPI {
       body: JSON.stringify({ email, password }),
     });
 
-    if (response.token) {
-      this.setToken(response.token);
+    if (response.user) {
+      this.setUser(response.user);
     }
 
     return response;
@@ -98,7 +110,7 @@ class RootFocusAPI {
   }
 
   logout() {
-    this.setToken(null);
+    this.setUser(null);
   }
 
   // Focus session methods
@@ -188,15 +200,18 @@ class RootFocusAPI {
 
   // Utility methods
   isAuthenticated() {
-    return !!this.getToken();
+    return !!this.getUserId();
   }
 
   // Health check
   async healthCheck() {
     try {
       // Try to get profile as a health check
-      await this.getProfile();
-      return true;
+      if (this.isAuthenticated()) {
+        await this.getProfile();
+        return true;
+      }
+      return false;
     } catch (error) {
       return false;
     }
