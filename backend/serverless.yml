@@ -55,7 +55,35 @@ functions:
       - http:
           path: auth/register
           method: post
-          cors: true
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-user-id
+            allowCredentials: false
+
+  registerOptions:
+    handler: src/handlers/auth.options
+    events:
+      - http:
+          path: auth/register
+          method: options
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-user-id
+            allowCredentials: false
 
   login:
     handler: src/handlers/auth.login
@@ -63,7 +91,35 @@ functions:
       - http:
           path: auth/login
           method: post
-          cors: true
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-user-id
+            allowCredentials: false
+
+  loginOptions:
+    handler: src/handlers/auth.options
+    events:
+      - http:
+          path: auth/login
+          method: options
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-user-id
+            allowCredentials: false
 
   getProfile:
     handler: src/handlers/auth.getProfile
@@ -71,7 +127,35 @@ functions:
       - http:
           path: auth/profile
           method: get
-          cors: true
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-user-id
+            allowCredentials: false
+
+  profileOptions:
+    handler: src/handlers/auth.options
+    events:
+      - http:
+          path: auth/profile
+          method: options
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-user-id
+            allowCredentials: false
 
   updateProfile:
     handler: src/handlers/auth.updateProfile

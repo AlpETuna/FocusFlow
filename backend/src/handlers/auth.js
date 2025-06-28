@@ -357,3 +357,17 @@ exports.updateProfile = async (event) => {
     };
   }
 };
+
+// Handle OPTIONS requests for CORS preflight
+exports.options = async (event) => {
+  return {
+    statusCode: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,x-user-id',
+      'Access-Control-Allow-Methods': 'OPTIONS,POST,GET,PUT,DELETE',
+      'Access-Control-Max-Age': '86400'
+    },
+    body: JSON.stringify({ message: 'CORS preflight successful' })
+  };
+};

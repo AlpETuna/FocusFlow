@@ -1,9 +1,20 @@
 // API service for Root Focus backend communication
 
 class RootFocusAPI {
-  constructor(baseURL = process.env.REACT_APP_API_URL || 'https://your-api-gateway-url.amazonaws.com/dev') {
-    this.baseURL = baseURL;
+  constructor(baseURL = process.env.REACT_APP_API_URL || 'https://your-api-gateway-url.amazonaws.com') {
+    // Fix double /dev issue - remove any trailing /dev or /dev/dev
+    let cleanURL = baseURL;
+    
+    // Remove multiple /dev patterns
+    cleanURL = cleanURL.replace(/\/dev\/dev$/g, '');
+    cleanURL = cleanURL.replace(/\/dev$/g, '');
+    
+    // Add single /dev at the end
+    this.baseURL = `${cleanURL}/dev`;
+    
     this.user = this.getStoredUser();
+    console.log('🚀 Raw Environment URL:', process.env.REACT_APP_API_URL);
+    console.log('🔧 Cleaned Base URL:', this.baseURL);
   }
 
   // Set user data (replaces token-based auth)
@@ -71,8 +82,36 @@ class RootFocusAPI {
     }
   }
 
+  // Test method to check API connectivity
+  async testConnection() {
+    try {
+      console.log('🔍 Testing API connection...');
+      console.log('🌐 Base URL:', this.baseURL);
+      console.log('🌐 Full URL:', `${this.baseURL}/auth/register`);
+      
+      // Try a simple OPTIONS request first to test CORS
+      const testResponse = await fetch(`${this.baseURL}/auth/register`, {
+        method: 'OPTIONS',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      
+      console.log('✅ OPTIONS response status:', testResponse.status);
+      console.log('✅ OPTIONS response headers:', Object.fromEntries(testResponse.headers.entries()));
+      
+      return { success: true, status: testResponse.status };
+    } catch (error) {
+      console.error('❌ Connection test failed:', error);
+      return { success: false, error: error.message };
+    }
+  }
+
   // Authentication methods
   async register(email, password, name) {
+    // Test connection first
+    await this.testConnection();
+    
     const response = await this.request('/auth/register', {
       method: 'POST',
       body: JSON.stringify({ email, password, name }),
