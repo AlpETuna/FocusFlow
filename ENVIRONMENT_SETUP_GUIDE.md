@@ -66,37 +66,47 @@ This will output your API Gateway URL.
 Copy the API Gateway URL from the deployment output and update:
 - `.env` file: `REACT_APP_API_URL=your-api-gateway-url`
 
-## 🌐 Netlify Deployment Setup
+## 🌐 AWS Amplify Deployment Setup (Recommended)
+
+### Step 1: Deploy Backend First
+Make sure your backend is deployed and you have the API Gateway URL.
+
+### Step 2: Create Amplify App
+1. Go to [AWS Amplify Console](https://console.aws.amazon.com/amplify/)
+2. Choose "Host web app"
+3. Connect your Git repository
+4. Select your branch (main/master)
+
+### Step 3: Set Environment Variables in Amplify
+Go to App settings → Environment variables and set:
+
+#### Required Variables:
+```
+ESLINT_NO_DEV_ERRORS=true
+GENERATE_SOURCEMAP=false
+REACT_APP_API_URL=https://your-api-gateway-url.execute-api.us-east-1.amazonaws.com/dev
+```
+
+### Step 4: Deploy
+Amplify will automatically build and deploy your app using the `amplify.yml` configuration.
+
+**For detailed instructions, see: [`AWS_AMPLIFY_SETUP.md`](AWS_AMPLIFY_SETUP.md)**
+
+## 🌐 Alternative: Netlify Deployment Setup
+
+If you prefer Netlify over Amplify:
 
 ### Step 1: Set Environment Variables in Netlify
 Go to your Netlify site dashboard → Site settings → Environment variables
-
-Set these variables:
 
 #### Required Variables:
 ```
 ESLINT_NO_DEV_ERRORS=true
 GENERATE_SOURCEMAP=false
 REACT_APP_API_URL=https://your-api-gateway-url.execute-api.us-east-1.amazonaws.com/prod
-MY_AWS_ACCESS_KEY_ID=your-aws-access-key-id
-MY_AWS_SECRET_ACCESS_KEY=your-aws-secret-access-key
-MY_AWS_DEFAULT_REGION=us-east-1
-JWT_SECRET=your-generated-jwt-secret
 ```
 
-### Step 2: Get the Values
-
-#### JWT_SECRET
-Get this from your local `backend/.env` file after running setup.sh, or generate a new one:
-```bash
-node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
-```
-
-#### AWS Credentials
-Use the same AWS credentials you set up for local development.
-
-#### REACT_APP_API_URL
-This should be your deployed backend API Gateway URL from the serverless deployment.
+Note: Netlify doesn't need AWS credentials since the backend is deployed separately.
 
 ## 📋 Environment Variables Summary
 
@@ -114,12 +124,20 @@ MY_AWS_REGION=us-east-1
 MY_AWS_PROFILE=default
 ```
 
-### Netlify Environment Variables
-All of the above, plus:
+### AWS Amplify Environment Variables
+Frontend only (AWS credentials handled by Amplify service integration):
 ```
-MY_AWS_ACCESS_KEY_ID=your-aws-access-key-id
-MY_AWS_SECRET_ACCESS_KEY=your-aws-secret-access-key
-MY_AWS_DEFAULT_REGION=us-east-1
+ESLINT_NO_DEV_ERRORS=true
+GENERATE_SOURCEMAP=false
+REACT_APP_API_URL=https://your-api-gateway-url.execute-api.us-east-1.amazonaws.com/dev
+```
+
+### Netlify Environment Variables (Alternative)
+If using Netlify instead of Amplify:
+```
+ESLINT_NO_DEV_ERRORS=true
+GENERATE_SOURCEMAP=false
+REACT_APP_API_URL=https://your-api-gateway-url.execute-api.us-east-1.amazonaws.com/prod
 ```
 
 ## 🔒 Security Notes
@@ -153,9 +171,9 @@ cd ..
 npm install
 npm start
 
-# 6. Deploy to Netlify
-# Set environment variables in Netlify UI
-# Push to GitHub (if connected) or deploy manually
+# 6. Deploy to AWS Amplify
+# Follow AWS_AMPLIFY_SETUP.md guide
+# Connect your Git repository and set environment variables
 ```
 
 ## 🆘 Troubleshooting

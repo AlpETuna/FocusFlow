@@ -176,14 +176,23 @@ Designed for minimal running costs:
 ## 🌐 Hosting Options
 
 ### Frontend Deployment
-- **Netlify** (Recommended) - Drag & drop the `build` folder
+- **AWS Amplify** (Recommended) - Native AWS integration with auto-deployment
+- **Netlify** - Drag & drop the `build` folder
 - **Vercel** - Connect GitHub repository
-- **AWS S3 + CloudFront** - Full AWS integration
+- **AWS S3 + CloudFront** - Manual AWS hosting
 - **GitHub Pages** - Free hosting
 
 ### Backend
 - **AWS Lambda** (Default) - Serverless, auto-scaling
 - Fully configured via Serverless Framework
+
+### Why AWS Amplify?
+- **Seamless AWS integration** with your serverless backend
+- **Auto-deployment** from Git repository
+- **Global CDN** with CloudFront
+- **Free SSL certificates**
+- **Environment management** per branch
+- **Preview deployments** for pull requests
 
 ## 🧪 Testing Your Deployment
 

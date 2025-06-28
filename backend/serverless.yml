@@ -205,7 +205,6 @@ resources:
                 KeyType: HASH
             Projection:
               ProjectionType: ALL
-            BillingMode: PAY_PER_REQUEST
         BillingMode: PAY_PER_REQUEST
 
     # Focus Sessions Table
@@ -232,7 +231,6 @@ resources:
                 KeyType: RANGE
             Projection:
               ProjectionType: ALL
-            BillingMode: PAY_PER_REQUEST
         BillingMode: PAY_PER_REQUEST
 
     # Focus Scores Table
@@ -259,7 +257,6 @@ resources:
                 KeyType: RANGE
             Projection:
               ProjectionType: ALL
-            BillingMode: PAY_PER_REQUEST
         BillingMode: PAY_PER_REQUEST
 
     # Groups Table
@@ -282,7 +279,6 @@ resources:
                 KeyType: HASH
             Projection:
               ProjectionType: ALL
-            BillingMode: PAY_PER_REQUEST
         BillingMode: PAY_PER_REQUEST
 
     # Group Members Table
@@ -307,14 +303,12 @@ resources:
                 KeyType: HASH
             Projection:
               ProjectionType: ALL
-            BillingMode: PAY_PER_REQUEST
           - IndexName: UserGroups
             KeySchema:
               - AttributeName: userId
                 KeyType: HASH
             Projection:
               ProjectionType: ALL
-            BillingMode: PAY_PER_REQUEST
         BillingMode: PAY_PER_REQUEST
 
   Outputs:
