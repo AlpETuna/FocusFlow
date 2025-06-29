@@ -2,7 +2,7 @@
 
 FocusFlow is an advanced productivity application that combines the Pomodoro technique with AI-powered screen monitoring to help users maintain focus and track their study habits effectively.
 
-🔗 **Live Demo**: [https://focus-flow-app.netlify.app](https://focus-flow-app.netlify.app)
+🔗 **Live Demo**: [https://root-flow.netlify.app/](https://root-flow.netlify.app/)
 
 ## 🚀 Technology Stack
 
