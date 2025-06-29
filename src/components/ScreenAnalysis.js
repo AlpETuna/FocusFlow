@@ -162,6 +162,30 @@ const ScreenAnalysis = ({ sessionId, onAnalysisResult, isActive = false }) => {
     }
   };
 
+  const handleAnalysisResult = async (analysis) => {
+    // Update next analysis time (2 minutes from now)
+    const nextTime = new Date(Date.now() + 2 * 60 * 1000);
+    setNextAnalysisTime(nextTime);
+    
+    // Handle focus score adjustments
+    if (analysis.focusScore >= 70) {
+      // High focus: will add 10 minutes
+      console.log('High focus detected! Score:', analysis.focusScore);
+    } else if (analysis.focusScore < 40) {
+      // Low focus: will deduct 20 minutes
+      console.warn('Low focus detected! Score:', analysis.focusScore);
+    }
+    
+    // Send adjustment to backend
+    if (sessionId) {
+      try {
+        await api.updateSessionFocusAdjustment(sessionId, analysis.focusScore);
+      } catch (error) {
+        console.error('Failed to update focus adjustment:', error);
+      }
+    }
+  };
+
   const analyzeNow = async () => {
     try {
       setError(null);
