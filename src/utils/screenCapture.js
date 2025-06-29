@@ -233,8 +233,7 @@ class FocusAnalysisAPI {
     // 2. Use image recognition to identify applications
     // 3. Send to a vision API for analysis
     
-    // For demo purposes, we'll analyze based on time and return realistic descriptions
-    const hour = new Date().getHours();
+    // For demo purposes, we'll return realistic descriptions
     const descriptions = [
       "User is coding in Visual Studio Code with multiple JavaScript files open",
       "User is browsing documentation on MDN Web Docs",

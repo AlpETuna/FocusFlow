@@ -6,7 +6,7 @@ import TreeVisualization from './TreeVisualization';
 import ScreenAnalysis from './ScreenAnalysis';
 
 function FocusSession() {
-  const { user, refreshUser } = useAuth();
+  const { user } = useAuth();
   const {
     sessionTime,
     timeLeft,

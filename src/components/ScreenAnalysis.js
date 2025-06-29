@@ -105,22 +105,6 @@ const ScreenAnalysis = ({ sessionId, onAnalysisResult, isActive = false }) => {
     }
   };
 
-  const startAnalysis = async () => {
-    try {
-      setError(null);
-      if (screenAnalysis && sessionId && !permissionDenied) {
-        // Only request permission once
-        if (!permissionGranted && !isCapturing) {
-          await requestPermission();
-        }
-      }
-    } catch (error) {
-      console.error('Failed to start analysis:', error);
-      setError(error.message);
-      setPermissionDenied(true);
-    }
-  };
-
   const startAnalysisWithStoredPermission = async () => {
     try {
       setError(null);
