@@ -1,49 +1,36 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useTimer } from '../contexts/TimerContext';
 import { Play, Pause, Square, RotateCcw, Settings } from 'lucide-react';
 import TreeVisualization from './TreeVisualization';
 import ScreenAnalysis from './ScreenAnalysis';
-import api from '../services/api';
 
 function FocusSession() {
   const { user, refreshUser } = useAuth();
-  const [sessionTime, setSessionTime] = useState(25 * 60); // 25 minutes in seconds
-  const [timeLeft, setTimeLeft] = useState(sessionTime);
-  const [isActive, setIsActive] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
-  const [sessionType, setSessionType] = useState('focus'); // 'focus' or 'break'
+  const {
+    sessionTime,
+    timeLeft,
+    isActive,
+    isPaused,
+    sessionType,
+    currentSessionId,
+    selectedPreset,
+    presets,
+    setSelectedPreset,
+    startTimer,
+    pauseTimer,
+    stopTimer,
+    resetTimer,
+    completeSession
+  } = useTimer();
+  
   const [completedSessions, setCompletedSessions] = useState(0);
   const [showSettings, setShowSettings] = useState(false);
-  const intervalRef = useRef(null);
-  const audioRef = useRef(null);
-  
-  // Backend session management
-  const [currentSessionId, setCurrentSessionId] = useState(null);
   const [sessionError, setSessionError] = useState(null);
+  const audioRef = useRef(null);
   
   // AI Monitoring States
   const [aiMonitoring, setAiMonitoring] = useState(true);
-
-  // Timer presets
-  const presets = {
-    pomodoro: { focus: 25, break: 5 },
-    short: { focus: 15, break: 3 },
-    long: { focus: 45, break: 10 },
-  };
-
-  const [selectedPreset, setSelectedPreset] = useState('pomodoro');
-
-  useEffect(() => {
-    if (isActive && !isPaused && timeLeft > 0) {
-      intervalRef.current = setInterval(() => {
-        setTimeLeft(time => time - 1);
-      }, 1000);
-    } else {
-      clearInterval(intervalRef.current);
-    }
-
-    return () => clearInterval(intervalRef.current);
-  }, [isActive, isPaused, timeLeft]);
 
   useEffect(() => {
     if (timeLeft === 0 && isActive) {
@@ -53,110 +40,42 @@ function FocusSession() {
   }, [timeLeft, isActive]);
 
   // Handle analysis results from ScreenAnalysis component
-  const handleAnalysisResult = (analysis) => {
-    // Handle low focus scores
-    if (analysis.focusScore < 40 && isActive && !isPaused) {
-      // Show warning for low focus
-      console.warn('Low focus detected:', analysis);
+  const handleAnalysisResult = async (analysis) => {
+    // Handle focus score-based time adjustments
+    if (analysis.focusScore >= 70) {
+      // High focus: add 10 minutes
+      console.log('High focus detected, adding 10 minutes bonus');
+      // This will be handled by the backend when the session ends
+    } else if (analysis.focusScore < 40) {
+      // Low focus: subtract 20 minutes
+      console.warn('Low focus detected, will deduct 20 minutes');
+      // This will be handled by the backend when the session ends
     }
   };
 
   const handleSessionComplete = async () => {
-    setIsActive(false);
-    setIsPaused(false);
-    
     // Play completion sound
     if (audioRef.current) {
       audioRef.current.play().catch(e => console.log('Audio play failed:', e));
     }
 
-    if (sessionType === 'focus' && currentSessionId) {
-      try {
-        // End the session in the backend
-        await api.endFocusSession(currentSessionId);
-        setCurrentSessionId(null);
-        
-        // Refresh user data from backend
-        await refreshUser();
-        
-        setCompletedSessions(prev => prev + 1);
-        
-        // Switch to break
-        setSessionType('break');
-        const breakTime = getBreakTime() * 60;
-        setTimeLeft(breakTime);
-        setSessionTime(breakTime);
-      } catch (error) {
-        console.error('Failed to end focus session:', error);
-        setSessionError('Failed to save session data');
-      }
-    } else {
-      // Break completed, switch back to focus
-      setSessionType('focus');
-      const focusTime = getFocusTime() * 60;
-      setTimeLeft(focusTime);
-      setSessionTime(focusTime);
+    await completeSession();
+    setCompletedSessions(prev => prev + 1);
+  };
+
+  const handleStartTimer = async () => {
+    setSessionError(null);
+    const result = await startTimer();
+    if (!result.success) {
+      setSessionError(result.error || 'Failed to start session. Please try again.');
     }
   };
 
-  const getFocusTime = () => {
-    return presets[selectedPreset].focus;
-  };
-
-  const getBreakTime = () => {
-    return presets[selectedPreset].break;
-  };
-
-  const startTimer = async () => {
-    try {
-      setSessionError(null);
-      
-      if (sessionType === 'focus') {
-        // Start a new focus session in the backend
-        const response = await api.startFocusSession(
-          null, // groupId
-          `${selectedPreset} session` // goal
-        );
-        
-        if (response.success) {
-          setCurrentSessionId(response.session.sessionId);
-        } else {
-          throw new Error('Failed to start session');
-        }
-      }
-      
-      setIsActive(true);
-      setIsPaused(false);
-    } catch (error) {
-      console.error('Failed to start session:', error);
-      setSessionError('Failed to start session. Please try again.');
+  const handlePresetChange = (preset) => {
+    setSelectedPreset(preset);
+    if (!isActive) {
+      resetTimer();
     }
-  };
-
-  const pauseTimer = () => {
-    setIsPaused(!isPaused);
-  };
-
-  const stopTimer = async () => {
-    try {
-      if (currentSessionId && sessionType === 'focus') {
-        // End the session in the backend
-        await api.endFocusSession(currentSessionId);
-        setCurrentSessionId(null);
-      }
-    } catch (error) {
-      console.error('Failed to end session:', error);
-    }
-    
-    setIsActive(false);
-    setIsPaused(false);
-    resetTimer();
-  };
-
-  const resetTimer = () => {
-    const time = sessionType === 'focus' ? getFocusTime() * 60 : getBreakTime() * 60;
-    setTimeLeft(time);
-    setSessionTime(time);
   };
 
   const formatTime = (seconds) => {
@@ -167,17 +86,6 @@ function FocusSession() {
 
   const getProgressPercentage = () => {
     return ((sessionTime - timeLeft) / sessionTime) * 100;
-  };
-
-  const handlePresetChange = (preset) => {
-    setSelectedPreset(preset);
-    if (!isActive) {
-      const time = sessionType === 'focus' 
-        ? presets[preset].focus * 60
-        : presets[preset].break * 60;
-      setTimeLeft(time);
-      setSessionTime(time);
-    }
   };
 
   return (
@@ -310,7 +218,7 @@ function FocusSession() {
               {/* Timer Controls */}
               <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
                 {!isActive ? (
-                  <button onClick={startTimer} className="btn btn-primary">
+                  <button onClick={handleStartTimer} className="btn btn-primary">
                     <Play size={20} />
                     Start
                   </button>
@@ -340,7 +248,7 @@ function FocusSession() {
                 </div>
                 <div className="stat-card">
                   <div className="stat-value">
-                    {Math.floor(((user?.totalFocusTime || 0) + completedSessions * getFocusTime()) / 60)}h
+                    {Math.floor((user?.totalFocusTime || 0) / 60)}h {((user?.totalFocusTime || 0) % 60)}m
                   </div>
                   <div className="stat-label">Total Focus Time</div>
                 </div>
@@ -364,13 +272,13 @@ function FocusSession() {
             <div style={{ textAlign: 'center', marginBottom: '16px' }}>
               <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '8px' }}>Your Growing Tree</h2>
               <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>
-                Level {user?.treeLevel || 1}
+                Level {user?.level || 1}
               </p>
             </div>
             
             <div className="tree-container" style={{ marginBottom: '24px' }}>
               <TreeVisualization
-                level={user?.treeLevel || 1}
+                level={user?.level || 1}
                 animated={isActive && sessionType === 'focus'}
               />
             </div>
@@ -389,8 +297,8 @@ function FocusSession() {
               {/* Next Level Progress */}
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '8px' }}>
-                  <span>Level {user?.treeLevel || 1}</span>
-                  <span>Level {(user?.treeLevel || 1) + 1}</span>
+                  <span>Level {user?.level || 1}</span>
+                  <span>Level {(user?.level || 1) + 1}</span>
                 </div>
                 <div className="timer-progress">
                   <div

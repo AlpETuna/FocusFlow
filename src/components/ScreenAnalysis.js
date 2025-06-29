@@ -11,21 +11,26 @@ const ScreenAnalysis = ({ sessionId, onAnalysisResult, isActive = false }) => {
   const [lastAnalysis, setLastAnalysis] = useState(null);
   const [error, setError] = useState(null);
   const [permissionGranted, setPermissionGranted] = useState(false);
+  const [permissionDenied, setPermissionDenied] = useState(false);
+  const [hasCheckedStoredPermission, setHasCheckedStoredPermission] = useState(false);
+  const [nextAnalysisTime, setNextAnalysisTime] = useState(null);
+  const [timeUntilNextAnalysis, setTimeUntilNextAnalysis] = useState(null);
   const analysisRef = useRef(null);
+  const countdownIntervalRef = useRef(null);
 
   useEffect(() => {
     // Initialize screen analysis when component mounts
     const initializeAnalysis = async () => {
       try {
         const apiBaseURL = process.env.REACT_APP_API_URL || 'https://your-api-gateway-url.amazonaws.com/dev';
-        const token = api.getToken();
+        const userId = user?.userId;
         
-        if (!token) {
+        if (!userId) {
           setError('Authentication required');
           return;
         }
 
-        const analysis = new RootFocusScreenAnalysis(apiBaseURL, token);
+        const analysis = new RootFocusScreenAnalysis(apiBaseURL, userId);
         await analysis.initialize();
         
         // Set up analysis result callback
@@ -38,6 +43,15 @@ const ScreenAnalysis = ({ sessionId, onAnalysisResult, isActive = false }) => {
 
         analysisRef.current = analysis;
         setScreenAnalysis(analysis);
+        
+        // Check stored permission preference
+        const storedPermission = localStorage.getItem('focusflow_screen_permission');
+        if (storedPermission === 'granted') {
+          setPermissionGranted(true);
+        } else if (storedPermission === 'denied') {
+          setPermissionDenied(true);
+        }
+        setHasCheckedStoredPermission(true);
       } catch (error) {
         console.error('Failed to initialize screen analysis:', error);
         setError(error.message);
@@ -58,41 +72,78 @@ const ScreenAnalysis = ({ sessionId, onAnalysisResult, isActive = false }) => {
 
   useEffect(() => {
     // Start/stop analysis based on isActive prop
-    if (screenAnalysis && sessionId) {
-      if (isActive && !isCapturing) {
-        startAnalysis();
+    if (screenAnalysis && sessionId && hasCheckedStoredPermission) {
+      if (isActive && !isCapturing && permissionGranted) {
+        // Auto-start if permission was previously granted
+        startAnalysisWithStoredPermission();
       } else if (!isActive && isCapturing) {
         stopAnalysis();
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isActive, sessionId, screenAnalysis]);
+  }, [isActive, sessionId, screenAnalysis, hasCheckedStoredPermission, permissionGranted]);
 
   const requestPermission = async () => {
     try {
       setError(null);
-      if (screenAnalysis) {
+      if (screenAnalysis && !permissionDenied) {
         await screenAnalysis.startFocusSession(sessionId, 2); // Analyze every 2 minutes
         setIsCapturing(true);
         setPermissionGranted(true);
+        // Set initial next analysis time
+        const nextTime = new Date(Date.now() + 2 * 60 * 1000);
+        setNextAnalysisTime(nextTime);
+        // Store permission granted in localStorage
+        localStorage.setItem('focusflow_screen_permission', 'granted');
       }
     } catch (error) {
       console.error('Failed to request screen permission:', error);
-      setError('Screen capture permission denied or not supported');
+      setError('Screen capture permission denied. Click "Clear Permission" in settings to try again.');
+      setPermissionDenied(true);
+      // Store permission denied in localStorage
+      localStorage.setItem('focusflow_screen_permission', 'denied');
     }
   };
 
   const startAnalysis = async () => {
     try {
       setError(null);
-      if (screenAnalysis && sessionId) {
-        await screenAnalysis.startFocusSession(sessionId, 2);
-        setIsCapturing(true);
+      if (screenAnalysis && sessionId && !permissionDenied) {
+        // Only request permission once
+        if (!permissionGranted && !isCapturing) {
+          await requestPermission();
+        }
       }
     } catch (error) {
       console.error('Failed to start analysis:', error);
       setError(error.message);
+      setPermissionDenied(true);
     }
+  };
+
+  const startAnalysisWithStoredPermission = async () => {
+    try {
+      setError(null);
+      if (screenAnalysis && sessionId) {
+        await screenAnalysis.startFocusSession(sessionId, 2);
+        setIsCapturing(true);
+        // Set initial next analysis time
+        const nextTime = new Date(Date.now() + 2 * 60 * 1000);
+        setNextAnalysisTime(nextTime);
+      }
+    } catch (error) {
+      console.error('Failed to start analysis with stored permission:', error);
+      // If it fails, clear the stored permission
+      localStorage.removeItem('focusflow_screen_permission');
+      setPermissionGranted(false);
+    }
+  };
+
+  const clearPermission = () => {
+    localStorage.removeItem('focusflow_screen_permission');
+    setPermissionGranted(false);
+    setPermissionDenied(false);
+    setError(null);
   };
 
   const stopAnalysis = () => {
@@ -100,6 +151,11 @@ const ScreenAnalysis = ({ sessionId, onAnalysisResult, isActive = false }) => {
       if (screenAnalysis) {
         screenAnalysis.stopFocusSession();
         setIsCapturing(false);
+        setNextAnalysisTime(null);
+        setTimeUntilNextAnalysis(null);
+        if (countdownIntervalRef.current) {
+          clearInterval(countdownIntervalRef.current);
+        }
       }
     } catch (error) {
       console.error('Failed to stop analysis:', error);
@@ -113,6 +169,7 @@ const ScreenAnalysis = ({ sessionId, onAnalysisResult, isActive = false }) => {
         const result = await screenAnalysis.analyzeNow();
         setLastAnalysis(result);
         if (onAnalysisResult) {
+          await handleAnalysisResult(result);
           onAnalysisResult(result);
         }
       }
@@ -121,6 +178,30 @@ const ScreenAnalysis = ({ sessionId, onAnalysisResult, isActive = false }) => {
       setError(error.message);
     }
   };
+
+  // Update countdown timer
+  useEffect(() => {
+    if (nextAnalysisTime && isCapturing) {
+      countdownIntervalRef.current = setInterval(() => {
+        const now = new Date();
+        const diff = Math.max(0, nextAnalysisTime - now);
+        const minutes = Math.floor(diff / 60000);
+        const seconds = Math.floor((diff % 60000) / 1000);
+        setTimeUntilNextAnalysis(`${minutes}:${seconds.toString().padStart(2, '0')}`);
+      }, 1000);
+    } else {
+      if (countdownIntervalRef.current) {
+        clearInterval(countdownIntervalRef.current);
+      }
+      setTimeUntilNextAnalysis(null);
+    }
+
+    return () => {
+      if (countdownIntervalRef.current) {
+        clearInterval(countdownIntervalRef.current);
+      }
+    };
+  }, [nextAnalysisTime, isCapturing]);
 
   const getFocusScoreColor = (score) => {
     if (score >= 80) return '#22c55e';
@@ -195,10 +276,19 @@ const ScreenAnalysis = ({ sessionId, onAnalysisResult, isActive = false }) => {
           <button
             onClick={requestPermission}
             className="btn btn-primary"
-            disabled={!sessionId}
+            disabled={!sessionId || permissionDenied}
           >
-            Enable Monitoring
+            {permissionDenied ? 'Permission Denied' : 'Enable Monitoring'}
           </button>
+          {permissionDenied && (
+            <button
+              onClick={clearPermission}
+              className="btn btn-outline"
+              style={{ marginTop: '8px', fontSize: '12px', padding: '4px 8px' }}
+            >
+              Clear Permission
+            </button>
+          )}
         </div>
       )}
 
@@ -226,18 +316,33 @@ const ScreenAnalysis = ({ sessionId, onAnalysisResult, isActive = false }) => {
                 <span className="focus-score-label">Score</span>
               </div>
               <div style={{ flex: 1 }}>
-                <p style={{ fontWeight: '600', color: getFocusScoreColor(lastAnalysis.focusScore) }}>
-                  {getFocusScoreLabel(lastAnalysis.focusScore)}
-                </p>
-                <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>
-                  Activity: <span style={{ textTransform: 'capitalize' }}>{lastAnalysis.category}</span>
-                </p>
-                {lastAnalysis.reasoning && (
-                  <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '4px' }}>{lastAnalysis.reasoning}</p>
-                )}
-                <p style={{ fontSize: '12px', color: '#9ca3af', marginTop: '8px' }}>
-                  Last analyzed: {new Date(lastAnalysis.timestamp).toLocaleTimeString()}
-                </p>
+               <p style={{ fontWeight: '600', color: getFocusScoreColor(lastAnalysis.focusScore) }}>
+                 {getFocusScoreLabel(lastAnalysis.focusScore)}
+               </p>
+               <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>
+                 Activity: <span style={{ textTransform: 'capitalize' }}>{lastAnalysis.category}</span>
+               </p>
+               {lastAnalysis.reasoning && (
+                 <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '4px' }}>{lastAnalysis.reasoning}</p>
+               )}
+               {lastAnalysis.focusScore >= 70 && (
+                 <p style={{ fontSize: '12px', color: 'var(--success)', marginTop: '4px', fontWeight: '600' }}>
+                   +10 minutes bonus time!
+                 </p>
+               )}
+               {lastAnalysis.focusScore < 40 && (
+                 <p style={{ fontSize: '12px', color: 'var(--danger)', marginTop: '4px', fontWeight: '600' }}>
+                   -20 minutes penalty
+                 </p>
+               )}
+               <p style={{ fontSize: '12px', color: '#9ca3af', marginTop: '8px' }}>
+                 Last analyzed: {new Date(lastAnalysis.timestamp).toLocaleTimeString()}
+               </p>
+               {timeUntilNextAnalysis && (
+                 <p style={{ fontSize: '12px', color: '#6366f1', marginTop: '4px', fontWeight: '600' }}>
+                   Next analysis in: {timeUntilNextAnalysis}
+                 </p>
+               )}
               </div>
             </div>
           )}

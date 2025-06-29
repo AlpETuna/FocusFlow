@@ -63,7 +63,7 @@ function Leaderboard() {
         id: 5,
         name: user?.name || 'You',
         email: user?.email || 'you@example.com',
-        treeLevel: user?.treeLevel || 3,
+        treeLevel: user?.level || 3,
         focusTime: user?.totalFocusTime || 300,
         sessionsCount: user?.sessionsToday || 5,
         streak: user?.focusStreak || 2,

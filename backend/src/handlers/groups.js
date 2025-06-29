@@ -1,26 +1,24 @@
 const AWS = require('aws-sdk');
-const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
-const JWT_SECRET = process.env.JWT_SECRET;
 const USERS_TABLE = process.env.USERS_TABLE;
 const GROUPS_TABLE = process.env.GROUPS_TABLE;
 const GROUP_MEMBERS_TABLE = process.env.GROUP_MEMBERS_TABLE;
 const FOCUS_SESSIONS_TABLE = process.env.FOCUS_SESSIONS_TABLE;
 
-// Helper function to get user from token
-const getUserFromToken = async (event) => {
-  const token = event.headers.Authorization?.replace('Bearer ', '');
-  if (!token) {
-    throw new Error('No token provided');
+// Helper function to get user by userId from headers
+const getUserById = async (event) => {
+  const userId = event.headers['x-user-id'] || event.headers['X-User-Id'];
+  
+  if (!userId) {
+    throw new Error('User ID is required in headers (x-user-id)');
   }
 
-  const decoded = jwt.verify(token, JWT_SECRET);
   const result = await dynamodb.get({
     TableName: USERS_TABLE,
-    Key: { userId: decoded.userId }
+    Key: { userId: userId }
   }).promise();
 
   if (!result.Item) {
@@ -33,7 +31,7 @@ const getUserFromToken = async (event) => {
 // Create a new group
 exports.createGroup = async (event) => {
   try {
-    const user = await getUserFromToken(event);
+    const user = await getUserById(event);
     const { name, description, dailyGoalMinutes = 60 } = JSON.parse(event.body);
 
     if (!name) {
@@ -100,7 +98,7 @@ exports.createGroup = async (event) => {
   } catch (error) {
     console.error('Create group error:', error);
     return {
-      statusCode: error.message.includes('token') || error.message.includes('User not found') ? 401 : 500,
+      statusCode: error.message.includes('User ID is required') || error.message.includes('User not found') ? 401 : 500,
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': '*',
@@ -113,7 +111,7 @@ exports.createGroup = async (event) => {
 // Join a group
 exports.joinGroup = async (event) => {
   try {
-    const user = await getUserFromToken(event);
+    const user = await getUserById(event);
     const { groupId } = event.pathParameters;
 
     if (!groupId) {
@@ -209,7 +207,7 @@ exports.joinGroup = async (event) => {
   } catch (error) {
     console.error('Join group error:', error);
     return {
-      statusCode: error.message.includes('token') || error.message.includes('User not found') ? 401 : 500,
+      statusCode: error.message.includes('User ID is required') || error.message.includes('User not found') ? 401 : 500,
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': '*',
@@ -222,7 +220,7 @@ exports.joinGroup = async (event) => {
 // Get user's groups
 exports.getGroups = async (event) => {
   try {
-    const user = await getUserFromToken(event);
+    const user = await getUserById(event);
 
     // Get user's group memberships
     const memberships = await dynamodb.query({
@@ -272,7 +270,7 @@ exports.getGroups = async (event) => {
   } catch (error) {
     console.error('Get groups error:', error);
     return {
-      statusCode: error.message.includes('token') || error.message.includes('User not found') ? 401 : 500,
+      statusCode: error.message.includes('User ID is required') || error.message.includes('User not found') ? 401 : 500,
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': '*',
@@ -285,7 +283,7 @@ exports.getGroups = async (event) => {
 // Get group details with members
 exports.getGroupDetails = async (event) => {
   try {
-    const user = await getUserFromToken(event);
+    const user = await getUserById(event);
     const { groupId } = event.pathParameters;
 
     if (!groupId) {
@@ -383,7 +381,7 @@ exports.getGroupDetails = async (event) => {
   } catch (error) {
     console.error('Get group details error:', error);
     return {
-      statusCode: error.message.includes('token') || error.message.includes('User not found') ? 401 : 500,
+      statusCode: error.message.includes('User ID is required') || error.message.includes('User not found') ? 401 : 500,
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': '*',

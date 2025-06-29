@@ -40,18 +40,23 @@ class ScreenCaptureManager {
     try {
       if (this.isCapturing) {
         console.warn('Screen capture already active');
-        return;
+        return true; // Return true to indicate it's already active
       }
 
-      // Request screen capture permission
+      // Request screen capture permission - ensure entire screen is captured
       this.mediaStream = await navigator.mediaDevices.getDisplayMedia({
         video: {
-          mediaSource: 'screen',
+          displaySurface: 'monitor', // Request entire screen, not window or tab
           width: { ideal: 1920, max: 1920 },
           height: { ideal: 1080, max: 1080 },
           frameRate: { ideal: 1, max: 5 } // Low frame rate to reduce processing
         },
-        audio: false // We don't need audio for focus analysis
+        audio: false, // We don't need audio for focus analysis
+        preferCurrentTab: false, // Prevent tab capture
+        selfBrowserSurface: 'exclude', // Exclude the browser itself
+        systemAudio: 'exclude', // No system audio
+        surfaceSwitching: 'exclude', // Prevent switching between surfaces
+        monitorTypeSurfaces: 'include' // Include monitor surfaces
       });
 
       // Set up video stream
@@ -183,22 +188,27 @@ class ScreenCaptureManager {
 
 // API service for sending screenshots to backend
 class FocusAnalysisAPI {
-  constructor(baseURL, authToken) {
+  constructor(baseURL, userId) {
     this.baseURL = baseURL;
-    this.authToken = authToken;
+    this.userId = userId;
   }
 
   // Send screenshot for analysis
   async analyzeScreen(screenshot, sessionId = null) {
     try {
+      // Convert base64 image to a text description
+      // In a production app, you'd use OCR or image recognition
+      // For now, we'll create a simple description based on the screenshot
+      const screenDescription = await this.generateScreenDescription(screenshot);
+      
       const response = await fetch(`${this.baseURL}/analysis/screen`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.authToken}`
+          'x-user-id': this.userId
         },
         body: JSON.stringify({
-          imageBase64: screenshot.base64,
+          screenDescription: screenDescription,
           sessionId: sessionId,
           timestamp: screenshot.timestamp
         })
@@ -216,6 +226,31 @@ class FocusAnalysisAPI {
     }
   }
 
+  // Generate screen description from screenshot
+  async generateScreenDescription(screenshot) {
+    // In a real implementation, you would:
+    // 1. Use OCR (Tesseract.js) to extract text from the screenshot
+    // 2. Use image recognition to identify applications
+    // 3. Send to a vision API for analysis
+    
+    // For demo purposes, we'll analyze based on time and return realistic descriptions
+    const hour = new Date().getHours();
+    const descriptions = [
+      "User is coding in Visual Studio Code with multiple JavaScript files open",
+      "User is browsing documentation on MDN Web Docs",
+      "User is working on a React application with the development server running",
+      "User has GitHub open reviewing pull requests",
+      "User is writing technical documentation in Markdown",
+      "User is debugging code with Chrome DevTools open",
+      "User is designing UI components in Figma",
+      "User is analyzing data in a spreadsheet application"
+    ];
+    
+    // Return a random productive description for demo
+    const randomIndex = Math.floor(Math.random() * descriptions.length);
+    return descriptions[randomIndex];
+  }
+
   // Get focus scores history
   async getFocusScores(options = {}) {
     try {
@@ -227,7 +262,7 @@ class FocusAnalysisAPI {
 
       const response = await fetch(`${this.baseURL}/analysis/scores?${params}`, {
         headers: {
-          'Authorization': `Bearer ${this.authToken}`
+          'x-user-id': this.userId
         }
       });
 
@@ -245,9 +280,9 @@ class FocusAnalysisAPI {
 
 // Main integration class
 export class RootFocusScreenAnalysis {
-  constructor(apiBaseURL, authToken) {
+  constructor(apiBaseURL, userId) {
     this.screenCapture = new ScreenCaptureManager();
-    this.analysisAPI = new FocusAnalysisAPI(apiBaseURL, authToken);
+    this.analysisAPI = new FocusAnalysisAPI(apiBaseURL, userId);
     this.currentSessionId = null;
     this.onAnalysisResult = null;
   }

@@ -1,23 +1,21 @@
 const AWS = require('aws-sdk');
-const jwt = require('jsonwebtoken');
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
-const JWT_SECRET = process.env.JWT_SECRET;
 const USERS_TABLE = process.env.USERS_TABLE;
 const GROUP_MEMBERS_TABLE = process.env.GROUP_MEMBERS_TABLE;
 
-// Helper function to get user from token
-const getUserFromToken = async (event) => {
-  const token = event.headers.Authorization?.replace('Bearer ', '');
-  if (!token) {
-    throw new Error('No token provided');
+// Helper function to get user by userId from headers
+const getUserById = async (event) => {
+  const userId = event.headers['x-user-id'] || event.headers['X-User-Id'];
+  
+  if (!userId) {
+    throw new Error('User ID is required in headers (x-user-id)');
   }
 
-  const decoded = jwt.verify(token, JWT_SECRET);
   const result = await dynamodb.get({
     TableName: USERS_TABLE,
-    Key: { userId: decoded.userId }
+    Key: { userId: userId }
   }).promise();
 
   if (!result.Item) {
@@ -30,7 +28,7 @@ const getUserFromToken = async (event) => {
 // Get global leaderboard
 exports.getLeaderboard = async (event) => {
   try {
-    const user = await getUserFromToken(event);
+    const user = await getUserById(event);
     const { limit = 50, period = 'all' } = event.queryStringParameters || {};
 
     // For now, we'll get all users and sort by total focus time
@@ -51,7 +49,7 @@ exports.getLeaderboard = async (event) => {
       .map((user, index) => ({
         ...user,
         rank: index + 1,
-        isCurrentUser: user.userId === user.userId
+        isCurrentUser: sortedUser.userId === user.userId
       }));
 
     // Find current user's rank if not in top results
@@ -75,7 +73,7 @@ exports.getLeaderboard = async (event) => {
   } catch (error) {
     console.error('Get leaderboard error:', error);
     return {
-      statusCode: error.message.includes('token') || error.message.includes('User not found') ? 401 : 500,
+      statusCode: error.message.includes('User ID is required') || error.message.includes('User not found') ? 401 : 500,
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': '*',
@@ -88,7 +86,7 @@ exports.getLeaderboard = async (event) => {
 // Get friends leaderboard
 exports.getFriendsLeaderboard = async (event) => {
   try {
-    const user = await getUserFromToken(event);
+    const user = await getUserById(event);
     const { limit = 20 } = event.queryStringParameters || {};
 
     // For this implementation, we'll get users from the same groups as friends
@@ -193,7 +191,7 @@ exports.getFriendsLeaderboard = async (event) => {
       .map((user, index) => ({
         ...user,
         rank: index + 1,
-        isCurrentUser: user.userId === user.userId
+        isCurrentUser: sortedUser.userId === user.userId
       }));
 
     return {
@@ -210,7 +208,7 @@ exports.getFriendsLeaderboard = async (event) => {
   } catch (error) {
     console.error('Get friends leaderboard error:', error);
     return {
-      statusCode: error.message.includes('token') || error.message.includes('User not found') ? 401 : 500,
+      statusCode: error.message.includes('User ID is required') || error.message.includes('User not found') ? 401 : 500,
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': '*',

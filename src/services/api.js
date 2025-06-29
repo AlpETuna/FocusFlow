@@ -154,16 +154,40 @@ class RootFocusAPI {
 
   // Focus session methods
   async startFocusSession(groupId = null, goal = 'Focus session') {
-    return await this.request('/sessions/start', {
+    const response = await this.request('/sessions/start', {
       method: 'POST',
       body: JSON.stringify({ groupId, goal }),
     });
+    // Normalize response to include success field
+    return {
+      success: true,
+      ...response
+    };
   }
 
   async endFocusSession(sessionId) {
-    return await this.request('/sessions/stop', {
+    const response = await this.request('/sessions/stop', {
       method: 'POST',
       body: JSON.stringify({ sessionId }),
+    });
+    // Normalize response to include success field
+    return {
+      success: true,
+      ...response
+    };
+  }
+
+  async updateSessionFocusAdjustment(sessionId, focusScore) {
+    let adjustment = 0;
+    if (focusScore >= 70) {
+      adjustment = 10; // Add 10 minutes
+    } else if (focusScore < 40) {
+      adjustment = -20; // Subtract 20 minutes
+    }
+    
+    return await this.request('/sessions/adjust', {
+      method: 'POST',
+      body: JSON.stringify({ sessionId, adjustment, focusScore }),
     });
   }
 

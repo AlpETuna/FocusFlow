@@ -1,24 +1,22 @@
 const AWS = require('aws-sdk');
-const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
-const JWT_SECRET = process.env.JWT_SECRET;
 const USERS_TABLE = process.env.USERS_TABLE;
 const FOCUS_SESSIONS_TABLE = process.env.FOCUS_SESSIONS_TABLE;
 
-// Helper function to get user from token
-const getUserFromToken = async (event) => {
-  const token = event.headers.Authorization?.replace('Bearer ', '');
-  if (!token) {
-    throw new Error('No token provided');
+// Helper function to get user by userId from headers
+const getUserById = async (event) => {
+  const userId = event.headers['x-user-id'] || event.headers['X-User-Id'];
+  
+  if (!userId) {
+    throw new Error('User ID is required in headers (x-user-id)');
   }
 
-  const decoded = jwt.verify(token, JWT_SECRET);
   const result = await dynamodb.get({
     TableName: USERS_TABLE,
-    Key: { userId: decoded.userId }
+    Key: { userId: userId }
   }).promise();
 
   if (!result.Item) {
@@ -31,7 +29,7 @@ const getUserFromToken = async (event) => {
 // Start a new focus session
 exports.startSession = async (event) => {
   try {
-    const user = await getUserFromToken(event);
+    const user = await getUserById(event);
     const { groupId, goal } = JSON.parse(event.body || '{}');
 
     const sessionId = uuidv4();
@@ -69,7 +67,7 @@ exports.startSession = async (event) => {
   } catch (error) {
     console.error('Start session error:', error);
     return {
-      statusCode: error.message.includes('token') || error.message.includes('User not found') ? 401 : 500,
+      statusCode: error.message.includes('User ID is required') || error.message.includes('User not found') ? 401 : 500,
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': '*',
@@ -82,7 +80,7 @@ exports.startSession = async (event) => {
 // Stop a focus session
 exports.stopSession = async (event) => {
   try {
-    const user = await getUserFromToken(event);
+    const user = await getUserById(event);
     const { sessionId } = JSON.parse(event.body);
 
     if (!sessionId) {
@@ -148,9 +146,13 @@ exports.stopSession = async (event) => {
       ReturnValues: 'ALL_NEW'
     }).promise();
 
+    // Get any focus adjustments from the session
+    const focusAdjustment = updatedSession.Attributes.focusAdjustment || 0;
+    
     // Update user's total focus time and level
-    const focusTimeMinutes = Math.floor(duration / 60);
-    const newTotalFocusTime = user.totalFocusTime + focusTimeMinutes;
+    const focusTimeMinutes = Math.floor(duration / 60) + focusAdjustment;
+    const effectiveFocusTime = Math.max(0, focusTimeMinutes); // Don't allow negative time
+    const newTotalFocusTime = user.totalFocusTime + effectiveFocusTime;
     const newLevel = Math.floor(newTotalFocusTime / 60) + 1; // Level up every hour
 
     await dynamodb.update({
@@ -176,14 +178,115 @@ exports.stopSession = async (event) => {
       body: JSON.stringify({
         message: 'Focus session stopped',
         session: updatedSession.Attributes,
-        focusTimeAdded: focusTimeMinutes,
+        focusTimeAdded: effectiveFocusTime,
+        adjustment: focusAdjustment,
         newLevel
       })
     };
   } catch (error) {
     console.error('Stop session error:', error);
     return {
-      statusCode: error.message.includes('token') || error.message.includes('User not found') ? 401 : 500,
+      statusCode: error.message.includes('User ID is required') || error.message.includes('User not found') ? 401 : 500,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': '*',
+      },
+      body: JSON.stringify({ error: error.message || 'Internal server error' })
+    };
+  }
+};
+
+// Adjust session based on focus score
+exports.adjustSession = async (event) => {
+  try {
+    const user = await getUserById(event);
+    const { sessionId, adjustment, focusScore } = JSON.parse(event.body);
+
+    if (!sessionId || adjustment === undefined || focusScore === undefined) {
+      return {
+        statusCode: 400,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': '*',
+        },
+        body: JSON.stringify({ error: 'Session ID, adjustment, and focus score are required' })
+      };
+    }
+
+    // Get the session
+    const sessionResult = await dynamodb.get({
+      TableName: FOCUS_SESSIONS_TABLE,
+      Key: { sessionId }
+    }).promise();
+
+    if (!sessionResult.Item) {
+      return {
+        statusCode: 404,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': '*',
+        },
+        body: JSON.stringify({ error: 'Session not found' })
+      };
+    }
+
+    const session = sessionResult.Item;
+
+    // Verify session belongs to user and is active
+    if (session.userId !== user.userId) {
+      return {
+        statusCode: 403,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': '*',
+        },
+        body: JSON.stringify({ error: 'Unauthorized' })
+      };
+    }
+
+    if (session.status !== 'active') {
+      return {
+        statusCode: 400,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': '*',
+        },
+        body: JSON.stringify({ error: 'Session is not active' })
+      };
+    }
+
+    // Update session with adjustment
+    const currentAdjustment = session.focusAdjustment || 0;
+    const newAdjustment = currentAdjustment + adjustment;
+
+    await dynamodb.update({
+      TableName: FOCUS_SESSIONS_TABLE,
+      Key: { sessionId },
+      UpdateExpression: 'SET focusAdjustment = :adjustment, lastFocusScore = :score, lastAdjustmentTime = :time',
+      ExpressionAttributeValues: {
+        ':adjustment': newAdjustment,
+        ':score': focusScore,
+        ':time': new Date().toISOString()
+      }
+    }).promise();
+
+    return {
+      statusCode: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': '*',
+      },
+      body: JSON.stringify({
+        message: 'Session adjusted successfully',
+        adjustment: adjustment,
+        totalAdjustment: newAdjustment,
+        focusScore: focusScore
+      })
+    };
+  } catch (error) {
+    console.error('Adjust session error:', error);
+    return {
+      statusCode: error.message.includes('User ID is required') || error.message.includes('User not found') ? 401 : 500,
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': '*',
@@ -196,7 +299,7 @@ exports.stopSession = async (event) => {
 // Get user's focus sessions
 exports.getSessions = async (event) => {
   try {
-    const user = await getUserFromToken(event);
+    const user = await getUserById(event);
     const { limit = 20, lastEvaluatedKey } = event.queryStringParameters || {};
 
     const params = {
@@ -231,7 +334,7 @@ exports.getSessions = async (event) => {
   } catch (error) {
     console.error('Get sessions error:', error);
     return {
-      statusCode: error.message.includes('token') || error.message.includes('User not found') ? 401 : 500,
+      statusCode: error.message.includes('User ID is required') || error.message.includes('User not found') ? 401 : 500,
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': '*',

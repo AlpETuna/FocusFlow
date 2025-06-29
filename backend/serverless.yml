@@ -163,7 +163,35 @@ functions:
       - http:
           path: auth/profile
           method: put
-          cors: true
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-user-id
+            allowCredentials: false
+
+  updateProfileOptions:
+    handler: src/handlers/auth.options
+    events:
+      - http:
+          path: auth/profile
+          method: options
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-user-id
+            allowCredentials: false
 
   # Focus Session Functions
   startSession:
@@ -172,7 +200,35 @@ functions:
       - http:
           path: sessions/start
           method: post
-          cors: true
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-user-id
+            allowCredentials: false
+
+  startSessionOptions:
+    handler: src/handlers/auth.options
+    events:
+      - http:
+          path: sessions/start
+          method: options
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-user-id
+            allowCredentials: false
 
   stopSession:
     handler: src/handlers/sessions.stopSession
@@ -180,7 +236,71 @@ functions:
       - http:
           path: sessions/stop
           method: post
-          cors: true
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-user-id
+            allowCredentials: false
+
+  stopSessionOptions:
+    handler: src/handlers/auth.options
+    events:
+      - http:
+          path: sessions/stop
+          method: options
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-user-id
+            allowCredentials: false
+
+  adjustSession:
+    handler: src/handlers/sessions.adjustSession
+    events:
+      - http:
+          path: sessions/adjust
+          method: post
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-user-id
+            allowCredentials: false
+
+  adjustSessionOptions:
+    handler: src/handlers/auth.options
+    events:
+      - http:
+          path: sessions/adjust
+          method: options
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-user-id
+            allowCredentials: false
 
   getSessions:
     handler: src/handlers/sessions.getSessions
@@ -188,7 +308,35 @@ functions:
       - http:
           path: sessions
           method: get
-          cors: true
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-user-id
+            allowCredentials: false
+
+  getSessionsOptions:
+    handler: src/handlers/auth.options
+    events:
+      - http:
+          path: sessions
+          method: options
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-user-id
+            allowCredentials: false
 
   # Screen Analysis Functions
   analyzeScreen:
@@ -197,8 +345,36 @@ functions:
       - http:
           path: analysis/screen
           method: post
-          cors: true
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-user-id
+            allowCredentials: false
     timeout: 30
+
+  analyzeScreenOptions:
+    handler: src/handlers/auth.options
+    events:
+      - http:
+          path: analysis/screen
+          method: options
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-user-id
+            allowCredentials: false
 
   # Group Functions
   createGroup:
@@ -207,7 +383,35 @@ functions:
       - http:
           path: groups
           method: post
-          cors: true
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-user-id
+            allowCredentials: false
+
+  createGroupOptions:
+    handler: src/handlers/auth.options
+    events:
+      - http:
+          path: groups
+          method: options
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-user-id
+            allowCredentials: false
 
   joinGroup:
     handler: src/handlers/groups.joinGroup
@@ -215,7 +419,35 @@ functions:
       - http:
           path: groups/{groupId}/join
           method: post
-          cors: true
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-user-id
+            allowCredentials: false
+
+  joinGroupOptions:
+    handler: src/handlers/auth.options
+    events:
+      - http:
+          path: groups/{groupId}/join
+          method: options
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-user-id
+            allowCredentials: false
 
   getGroups:
     handler: src/handlers/groups.getGroups
@@ -223,7 +455,35 @@ functions:
       - http:
           path: groups
           method: get
-          cors: true
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-user-id
+            allowCredentials: false
+
+  getGroupsOptions:
+    handler: src/handlers/auth.options
+    events:
+      - http:
+          path: groups
+          method: options
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-user-id
+            allowCredentials: false
 
   getGroupDetails:
     handler: src/handlers/groups.getGroupDetails
@@ -231,7 +491,35 @@ functions:
       - http:
           path: groups/{groupId}
           method: get
-          cors: true
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-user-id
+            allowCredentials: false
+
+  getGroupDetailsOptions:
+    handler: src/handlers/auth.options
+    events:
+      - http:
+          path: groups/{groupId}
+          method: options
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-user-id
+            allowCredentials: false
 
   # Leaderboard Functions
   getLeaderboard:
@@ -240,7 +528,35 @@ functions:
       - http:
           path: leaderboard
           method: get
-          cors: true
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-user-id
+            allowCredentials: false
+
+  getLeaderboardOptions:
+    handler: src/handlers/auth.options
+    events:
+      - http:
+          path: leaderboard
+          method: options
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-user-id
+            allowCredentials: false
 
   getFriendsLeaderboard:
     handler: src/handlers/leaderboard.getFriendsLeaderboard
@@ -248,7 +564,35 @@ functions:
       - http:
           path: leaderboard/friends
           method: get
-          cors: true
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-user-id
+            allowCredentials: false
+
+  getFriendsLeaderboardOptions:
+    handler: src/handlers/auth.options
+    events:
+      - http:
+          path: leaderboard/friends
+          method: options
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-user-id
+            allowCredentials: false
 
   # Friends Functions
   addFriend:
@@ -257,7 +601,35 @@ functions:
       - http:
           path: friends/add
           method: post
-          cors: true
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-user-id
+            allowCredentials: false
+
+  addFriendOptions:
+    handler: src/handlers/auth.options
+    events:
+      - http:
+          path: friends/add
+          method: options
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-user-id
+            allowCredentials: false
 
   getFriends:
     handler: src/handlers/friends.getFriends
@@ -265,7 +637,35 @@ functions:
       - http:
           path: friends
           method: get
-          cors: true
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-user-id
+            allowCredentials: false
+
+  getFriendsOptions:
+    handler: src/handlers/auth.options
+    events:
+      - http:
+          path: friends
+          method: options
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-user-id
+            allowCredentials: false
 
 resources:
   Resources:

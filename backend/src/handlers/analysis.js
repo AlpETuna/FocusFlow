@@ -1,26 +1,24 @@
 const AWS = require('aws-sdk');
-const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 const bedrock = new AWS.BedrockRuntime({ region: process.env.MY_AWS_REGION });
 
-const JWT_SECRET = process.env.JWT_SECRET;
 const USERS_TABLE = process.env.USERS_TABLE;
 const FOCUS_SESSIONS_TABLE = process.env.FOCUS_SESSIONS_TABLE;
 const FOCUS_SCORES_TABLE = process.env.FOCUS_SCORES_TABLE;
 
-// Helper function to get user from token
-const getUserFromToken = async (event) => {
-  const token = event.headers.Authorization?.replace('Bearer ', '');
-  if (!token) {
-    throw new Error('No token provided');
+// Helper function to get user from headers
+const getUserFromHeaders = async (event) => {
+  const userId = event.headers['x-user-id'] || event.headers['X-User-Id'];
+  
+  if (!userId) {
+    throw new Error('User ID is required in headers (x-user-id)');
   }
 
-  const decoded = jwt.verify(token, JWT_SECRET);
   const result = await dynamodb.get({
     TableName: USERS_TABLE,
-    Key: { userId: decoded.userId }
+    Key: { userId: userId }
   }).promise();
 
   if (!result.Item) {
@@ -150,7 +148,7 @@ const analyzeScreenFallback = (screenDescription) => {
 // Analyze screen content and save focus score
 exports.analyzeScreen = async (event) => {
   try {
-    const user = await getUserFromToken(event);
+    const user = await getUserFromHeaders(event);
     const { sessionId, screenDescription, timestamp } = JSON.parse(event.body);
 
     if (!sessionId || !screenDescription) {
@@ -254,7 +252,7 @@ exports.analyzeScreen = async (event) => {
   } catch (error) {
     console.error('Screen analysis error:', error);
     return {
-      statusCode: error.message.includes('token') || error.message.includes('User not found') ? 401 : 500,
+      statusCode: error.message.includes('User ID') || error.message.includes('User not found') ? 401 : 500,
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': '*',

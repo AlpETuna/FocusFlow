@@ -25,7 +25,7 @@ function Dashboard() {
     {
       icon: <TreePine size={20} />,
       label: 'Tree Level',
-      value: user?.treeLevel || 1,
+      value: user?.level || 1,
       color: '#f59e0b',
       bgColor: '#f59e0b20'
     },
@@ -92,7 +92,7 @@ function Dashboard() {
               <div>
                 <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '4px' }}>Your Focus Tree</h2>
                 <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
-                  Level {user?.treeLevel || 1} • Keep growing!
+                  Level {user?.level || 1} • Keep growing!
                 </p>
               </div>
               <Link to="/focus" className="btn btn-primary">
@@ -102,13 +102,13 @@ function Dashboard() {
             </div>
             
             <div className="tree-container">
-              <TreeVisualization level={user?.treeLevel || 1} />
+              <TreeVisualization level={user?.level || 1} />
             </div>
 
             {/* Progress Bar */}
             <div style={{ marginTop: '16px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '8px' }}>
-                <span>Progress to Level {(user?.treeLevel || 1) + 1}</span>
+                <span>Progress to Level {(user?.level || 1) + 1}</span>
                 <span>{Math.round(((user?.totalFocusTime || 0) % 60) / 60 * 100)}%</span>
               </div>
               <div className="timer-progress">

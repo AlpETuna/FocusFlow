@@ -242,7 +242,7 @@ function Friends() {
                 <h3 style={{ fontWeight: 'bold', color: 'var(--primary)', marginBottom: '16px' }}>Your Stats</h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   <div className="stat-card">
-                    <div className="stat-value">L{user?.treeLevel || 1}</div>
+                    <div className="stat-value">L{user?.level || 1}</div>
                     <div className="stat-label">Tree Level</div>
                   </div>
                   <div className="stat-card">

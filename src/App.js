@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Navigate, Outlet } from 'react-router-dom';
 import LaunchPage from './components/LaunchPage';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
@@ -10,9 +10,10 @@ import Leaderboard from './components/Leaderboard';
 import GroupTree from './components/GroupTree';
 import Navbar from './components/Navbar';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { TimerProvider } from './contexts/TimerContext';
 import './App.css';
 
-function AppContent() {
+function AppLayout() {
   const { user, loading } = useAuth();
 
   if (loading) {
@@ -35,56 +36,79 @@ function AppContent() {
   return (
     <div className="App">
       {user && <Navbar />}
-      <Routes>
-        <Route
-          path="/launch"
-          element={!user ? <LaunchPage /> : <Navigate to="/dashboard" />}
-        />
-        <Route
-          path="/login"
-          element={user ? <Navigate to="/dashboard" /> : <Login />}
-        />
-        <Route
-          path="/dashboard"
-          element={user ? <Dashboard /> : <Navigate to="/launch" />}
-        />
-        <Route
-          path="/focus"
-          element={user ? <FocusSession /> : <Navigate to="/launch" />}
-        />
-        <Route
-          path="/groups"
-          element={user ? <GroupTree /> : <Navigate to="/launch" />}
-        />
-        <Route
-          path="/friends"
-          element={user ? <Friends /> : <Navigate to="/launch" />}
-        />
-        <Route
-          path="/leaderboard"
-          element={user ? <Leaderboard /> : <Navigate to="/launch" />}
-        />
-        <Route
-          path="/profile"
-          element={user ? <Profile /> : <Navigate to="/launch" />}
-        />
-        <Route
-          path="/"
-          element={<Navigate to={user ? "/dashboard" : "/launch"} />}
-        />
-      </Routes>
+      <Outlet />
     </div>
   );
 }
 
+function RequireAuth({ children }) {
+  const { user } = useAuth();
+  return user ? children : <Navigate to="/launch" replace />;
+}
+
+function RequireNoAuth({ children }) {
+  const { user } = useAuth();
+  return !user ? children : <Navigate to="/dashboard" replace />;
+}
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: (
+      <AuthProvider>
+        <TimerProvider>
+          <AppLayout />
+        </TimerProvider>
+      </AuthProvider>
+    ),
+    children: [
+      {
+        index: true,
+        element: <Navigate to="/dashboard" replace />
+      },
+      {
+        path: 'launch',
+        element: <RequireNoAuth><LaunchPage /></RequireNoAuth>
+      },
+      {
+        path: 'login',
+        element: <RequireNoAuth><Login /></RequireNoAuth>
+      },
+      {
+        path: 'dashboard',
+        element: <RequireAuth><Dashboard /></RequireAuth>
+      },
+      {
+        path: 'focus',
+        element: <RequireAuth><FocusSession /></RequireAuth>
+      },
+      {
+        path: 'groups',
+        element: <RequireAuth><GroupTree /></RequireAuth>
+      },
+      {
+        path: 'friends',
+        element: <RequireAuth><Friends /></RequireAuth>
+      },
+      {
+        path: 'leaderboard',
+        element: <RequireAuth><Leaderboard /></RequireAuth>
+      },
+      {
+        path: 'profile',
+        element: <RequireAuth><Profile /></RequireAuth>
+      }
+    ]
+  }
+], {
+  future: {
+    v7_startTransition: true,
+    v7_relativeSplatPath: true
+  }
+});
+
 function App() {
-  return (
-    <AuthProvider>
-      <Router>
-        <AppContent />
-      </Router>
-    </AuthProvider>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

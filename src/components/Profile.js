@@ -37,7 +37,7 @@ function Profile() {
   };
 
   const getTreeLevelDescription = () => {
-    const level = user?.treeLevel || 1;
+    const level = user?.level || 1;
     if (level === 1) return "🌱 Seedling - Just getting started!";
     if (level <= 3) return "🌿 Sapling - Building good habits!";
     if (level <= 5) return "🌳 Young Tree - Growing strong!";
@@ -65,7 +65,7 @@ function Profile() {
       name: 'Growing Strong',
       description: 'Reach tree level 5',
       icon: '🌳',
-      unlocked: (user?.treeLevel || 1) >= 5
+      unlocked: (user?.level || 1) >= 5
     },
     {
       id: 'week_streak',
@@ -86,7 +86,7 @@ function Profile() {
       name: 'Focus Master',
       description: 'Reach tree level 10',
       icon: '👑',
-      unlocked: (user?.treeLevel || 1) >= 10
+      unlocked: (user?.level || 1) >= 10
     }
   ];
 
@@ -105,7 +105,7 @@ function Profile() {
     },
     {
       label: 'Tree Level',
-      value: user?.treeLevel || 1,
+      value: user?.level || 1,
       icon: <TrendingUp size={20} />,
       color: 'text-sage-green'
     },
@@ -233,7 +233,7 @@ function Profile() {
                       {getTreeLevelDescription()}
                     </div>
                     <div style={{ fontSize: '14px', color: '#32cd32' }}>
-                      Level {user?.treeLevel || 1} Focus Tree
+                      Level {user?.level || 1} Focus Tree
                     </div>
                   </div>
                 </div>
@@ -245,7 +245,7 @@ function Profile() {
                   <h3 className="card-title">Your Focus Tree</h3>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
-                  <TreeVisualization level={user?.treeLevel || 1} animated={false} />
+                  <TreeVisualization level={user?.level || 1} animated={false} />
                 </div>
               </div>
             </div>
@@ -284,7 +284,7 @@ function Profile() {
                 {/* Progress to Next Level */}
                 <div style={{ marginTop: '24px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: '#32cd32', marginBottom: '8px' }}>
-                    <span>Progress to Level {(user?.treeLevel || 1) + 1}</span>
+                    <span>Progress to Level {(user?.level || 1) + 1}</span>
                     <span>
                       {Math.min(((user?.totalFocusTime || 0) % 60) / 60 * 100, 100).toFixed(0)}%
                     </span>
